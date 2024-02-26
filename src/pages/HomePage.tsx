@@ -1,10 +1,11 @@
 import React from 'react';
+import { Container } from '../components/LayoutComponents';
 
 function HomePage() {
     return (
-        <div>
+        <Container>
             teste
-        </div>
+        </Container>
     );
 }
 
