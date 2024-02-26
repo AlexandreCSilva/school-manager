@@ -71,7 +71,6 @@ const LogoStyle = styled.div`
     margin-left: -15px;
     width: 200px;
     height: 100px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,57 +83,57 @@ function Logo() {
     const cardRef = useRef<any>();
   
     const [{ xys }, api] = useSpring(
-      () => ({
-        xys: [0, 0, 1],
-        config: {
-          mass: 1,
-          tension: 170,
-          friction: 26,
-          precision: 0.01,
-          clamp: false,
-          velocity: 0,
-        }
-      }),
-      []
+        () => ({
+            xys: [0, 0, 1],
+            config: {
+            mass: 1,
+            tension: 170,
+            friction: 7,
+            precision: 0.01,
+            clamp: false,
+            velocity: 0,
+            }
+        }),
+        []
     );
   
     const handleMouseLeave = () => {
-      api.start({
-        xys: [0, 0, 1]
-      });
-      setHovered(false);
+        api.start({
+            xys: [0, 0, 1]
+        });
+        setHovered(false);
     };
     
     const handleMouseMove = (e: any) => {
-      const rect = cardRef.current.getBoundingClientRect();
-      api.start({
-        xys: calc(e.clientX, e.clientY, rect)
-      });
-      setHovered(true);
+        const rect = cardRef.current.getBoundingClientRect();
+        api.start({
+            xys: calc(e.clientX, e.clientY, rect)
+        });
+        setHovered(true);
     };
 
   
     return (
-      <LogoStyle
-        as={animated.div}
-        style={{ transform: xys.to(trans) }}
-        onClick={() => navigate('/')}
-        onMouseLeave={handleMouseLeave}
-        onMouseMove={handleMouseMove}
-        ref={ cardRef }
-      >
-          School Manager
-      </LogoStyle>
+        <LogoStyle
+            as={animated.div}
+            style={{ transform: xys.to(trans) }}
+            onClick={() => navigate('/')}
+            onMouseLeave={handleMouseLeave}
+            onMouseMove={handleMouseMove}
+            ref={ cardRef }
+        >
+            School Manager
+        </LogoStyle>
     );
-  }
+}
   
-  const calc = (x: number, y: number, rect: { top: number, left: number, height: number, width: number }) => [
+const calc = (x: number, y: number, rect: { top: number, left: number, height: number, width: number }) => [
     -(y - rect.top - rect.height / 2) / 5,
     (x - rect.left - rect.width / 2) / 5,
     1.4,
-  ];
-  
-  const trans = (x: number, y: number, s: number) =>
+];
+
+const trans = (x: number, y: number, s: number) =>
     `perspective(1000px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 
 function Menu({ children }: Props) {
