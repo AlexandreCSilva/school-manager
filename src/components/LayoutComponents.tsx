@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
     width: 100vw;
     height: 100vh;
-
-    background: rgb(0,36,0);
-    background: linear-gradient(315deg, rgba(0,36,0,1) 5%, rgba(9,121,28,1) 45%, rgba(0,255,164,1) 100%);
+    background: rgb(9,121,28);
+    background: linear-gradient(315deg, rgba(9,121,28,1) 0%, rgba(0,255,164,1) 73%, rgba(255,255,255,1) 100%);
+    overflow: hidden;
 `
