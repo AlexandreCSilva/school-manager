@@ -12,6 +12,7 @@ const Content = styled.div`
     position: relative;
     top: 130px;
     z-index: 3;
+    padding-bottom: 80px;
 
     @media only screen and (max-width: 1630px) {
         margin: 0 20%;

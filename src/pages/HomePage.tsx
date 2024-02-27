@@ -48,6 +48,31 @@ const Content = styled.div`
             top: 90px;
             left: 60vw;
         }
+
+        @media only screen and (max-width: 870px) {
+            height: 100vh;
+            border-radius: 0;
+
+            * {
+                top: 0;
+                left: -260px;
+            }
+
+            img {
+                top: 490px;
+                left: 45vw;
+            }
+        }
+
+        @media only screen and (max-width: 650px) {
+            p, .text-box {
+                width: 400px;
+            }
+
+            p {
+                top: 420px;
+            }
+        }
     }
 `;
 
