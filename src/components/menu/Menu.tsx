@@ -177,7 +177,7 @@ function Menu({ children }: Props) {
 
                 <div className='side-menu'>
                     { 
-                        windowSize.innerWidth > 650 
+                        windowSize.innerWidth >= 720 
                         ? children 
                         : <Options />
                     }

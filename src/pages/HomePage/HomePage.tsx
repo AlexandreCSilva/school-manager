@@ -1,8 +1,8 @@
 import React from 'react';
-import Menu from '../components/menu/Menu';
+import Menu from '../../components/menu/Menu';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Container } from '../components/LayoutComponents';
+import { Container } from '../../components/LayoutComponents';
 
 const Content = styled.div`
     width: 100vw;
@@ -87,7 +87,7 @@ function HomePage() {
 
                 <div className='division'/>
 
-                <a onClick={() => navigate('/')}> registrar-se </a>
+                <a onClick={() => navigate('/sign-up')}> registrar-se </a>
                 <button onClick={() => navigate('/')}> Login </button>
             </Menu>
 

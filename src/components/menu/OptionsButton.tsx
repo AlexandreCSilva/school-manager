@@ -43,6 +43,8 @@ function Options() {
                 return '/'
             case 'sobre nós':
                 return '/about'
+            case 'registrar-se':
+                return '/sign-up'
             default:
                 return '/'
         }
