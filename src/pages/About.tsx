@@ -1,8 +1,8 @@
 import React from 'react';
-import { Container } from '../components/LayoutComponents';
 import Menu from '../components/menu/Menu';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Container } from '../components/LayoutComponents';
 
 const Content = styled.div`
     background: #0d3b093e;
@@ -35,7 +35,17 @@ const Image1 = styled.img`
     bottom: -200px;
     rotate: 20deg;
     border-radius: 38% 62% 70% 30% / 30% 47% 53% 70%;
-    box-shadow: rgba(6, 141, 6, 0.4) -30px 30px, rgba(6, 141, 6, 0.3) -60px 60px, rgba(16, 141, 6, 0.2) -90px 90px, rgba(6, 141, 6, 0.1) -120px 120px, rgba(6, 141, 6, 0.05) -150px 120px;
+
+    animation-name: ani-float;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out; 
+    
+    @keyframes ani-float {
+        0% { transform: translate(0,  0px); }
+        50% { transform: translate(0, 25px); }
+        100% { transform: translate(0, -0px); }    
+    }
 `;
 
 const Image2 = styled(Image1)`
@@ -46,7 +56,6 @@ const Image2 = styled(Image1)`
     rotate: 45deg;
     border-radius: 68% 32% 54% 46% / 44% 29% 71% 56%;
     z-index: 2;
-    box-shadow: rgba(6, 141, 6, 0.4) -20px 20px, rgba(6, 141, 6, 0.3) -40px 40px, rgba(16, 141, 6, 0.2) -60px 60px, rgba(6, 141, 6, 0.1) -80px 80px, rgba(6, 141, 6, 0.05) -100px 100px;
 `;
 
 const Image3 = styled(Image1)`
@@ -57,7 +66,6 @@ const Image3 = styled(Image1)`
     rotate: -20deg;
     border-radius: 68% 32% 54% 46% / 44% 60% 40% 56%;
     z-index: 1;
-    box-shadow: rgba(6, 141, 6, 0.4) -15px 15px, rgba(6, 141, 6, 0.3) -30px 30px, rgba(16, 141, 6, 0.2) -45px 45px, rgba(6, 141, 6, 0.1) -60px 60px, rgba(6, 141, 6, 0.05) -75px 75px;
 `;
 
 function About() {
@@ -66,6 +74,10 @@ function About() {
     return (
         <Container>
             <Menu>
+                <a onClick={() => navigate('/')}> Home </a>
+                <a className='emphasis' onClick={() => navigate('/about')}> quem somos </a>
+
+                <div className='division'/>
                 <a onClick={() => navigate('/')}> registrar-se </a>
                 <button onClick={() => navigate('/')}> Login </button>
             </Menu>

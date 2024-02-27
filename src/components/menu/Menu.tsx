@@ -3,14 +3,18 @@ import { Props } from '../../types';
 import styled from 'styled-components';
 import { animated, useSpring } from '@react-spring/web';
 import { useNavigate } from 'react-router-dom';
+import { IoBookSharp } from "react-icons/io5";
 
 const MenuBar = styled.div`
     max-height: 7vh;
-    padding: 10px 30px;
-
+    width: 94vw;
+    padding: 10px 3vw;
     display: flex;
     justify-content: space-between;
-
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    
     .side-menu {
         display: flex;
         align-items: center;
@@ -24,12 +28,16 @@ const MenuBar = styled.div`
             width: 3px;
             height: 35px;
             border-radius: 50px;
-            background: #fff;
+            background: #161618;
+        }
+
+        .emphasis {
+            color: #FD661F;
         }
         
         a {
             font-weight: 700;
-            color: #fff;
+            color: #161618;
             cursor: pointer;
             font-size: 18px;
             transition: 0.3s;
@@ -40,11 +48,11 @@ const MenuBar = styled.div`
         }
 
         button {
-            background: #fff;
+            background: #0B7077;
             border-radius: 10px;
             padding: 5px 10px;
             font-size: 24px;
-            color: #10d490;
+            color: #fff;
             cursor: pointer;
             border: none;
             box-shadow: none;
@@ -53,18 +61,16 @@ const MenuBar = styled.div`
 
         button:hover {
             font-size: 28px;
-            box-shadow: rgb(7, 105, 22) 0px 20px 30px -10px;
         }
     }
 `;
 
 const LogoStyle = styled.div`
     font-family: 'Montagu Slab';
-    font-optical-sizing: auto;
     font-weight: 700;
     font-style: normal;
     font-size: 28px;
-    color: #31d84d;
+    color: #0B7077;
     will-change: transform;
     padding-left: 30px;
     margin-top: -20px;
@@ -75,6 +81,10 @@ const LogoStyle = styled.div`
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
+    p {
+        margin-left: 10px;
+    }
 `;
 
 function Logo() {
@@ -122,7 +132,10 @@ function Logo() {
             onMouseMove={handleMouseMove}
             ref={ cardRef }
         >
-            School Manager
+            <IoBookSharp style={{ fontSize: "4em" }}/>
+            <p>
+               School Manager
+            </p>
         </LogoStyle>
     );
 }
