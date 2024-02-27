@@ -2,18 +2,26 @@ import React from 'react';
 import Menu from '../components/menu/Menu';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { Container } from '../components/LayoutComponents';
+import Background, { Container } from '../components/LayoutComponents';
 
 const Content = styled.div`
-    background: #0d3b093e;
     width: 900px;
     border-radius: 50px;
     padding: 30px;
     margin-left: 8vw;
-    margin-top: 8vh;
+    position: relative;
+    top: 130px;
+    z-index: 3;
+
+    @media only screen and (max-width: 1630px) {
+        margin: 0 20%;
+        width: 60%;
+        display: wrap;
+        justify-content: center;
+    }
 
     h1 {
-        color: #094e15;
+        color: #0B7077;
         font-size: 32px;
         margin-bottom: 30px;
     }
@@ -27,7 +35,7 @@ const Content = styled.div`
 `;
 
 const Image1 = styled.img`
-    z-index: 3;
+    z-index: 6;
     width: 700px;
     height: 700px;
     position: fixed;
@@ -46,6 +54,10 @@ const Image1 = styled.img`
         50% { transform: translate(0, 25px); }
         100% { transform: translate(0, -0px); }    
     }
+
+    @media only screen and (max-width: 1630px) {
+        z-index: -1;
+    }
 `;
 
 const Image2 = styled(Image1)`
@@ -55,7 +67,11 @@ const Image2 = styled(Image1)`
     bottom: 350px;
     rotate: 45deg;
     border-radius: 68% 32% 54% 46% / 44% 29% 71% 56%;
-    z-index: 2;
+    z-index: 5;
+
+    @media only screen and (max-width: 1630px) {
+        z-index: -1;
+    }
 `;
 
 const Image3 = styled(Image1)`
@@ -65,7 +81,11 @@ const Image3 = styled(Image1)`
     bottom: 660px;
     rotate: -20deg;
     border-radius: 68% 32% 54% 46% / 44% 60% 40% 56%;
-    z-index: 1;
+    z-index: 4;
+
+    @media only screen and (max-width: 1630px) {
+        z-index: -1;
+    }
 `;
 
 function About() {
@@ -81,6 +101,8 @@ function About() {
                 <a onClick={() => navigate('/')}> registrar-se </a>
                 <button onClick={() => navigate('/')}> Login </button>
             </Menu>
+
+            <Background />
 
             <Content>
                 <h1>
