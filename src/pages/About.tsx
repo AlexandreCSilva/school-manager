@@ -95,10 +95,11 @@ function About() {
     return (
         <Container>
             <Menu>
-                <a onClick={() => navigate('/')}> Home </a>
-                <a className='emphasis' onClick={() => navigate('/about')}> quem somos </a>
+                <a onClick={() => navigate('/')}> home </a>
+                <a className='emphasis' onClick={() => navigate('/about')}> sobre nós </a>
 
                 <div className='division'/>
+
                 <a onClick={() => navigate('/')}> registrar-se </a>
                 <button onClick={() => navigate('/')}> Login </button>
             </Menu>

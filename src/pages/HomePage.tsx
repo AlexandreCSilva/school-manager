@@ -82,8 +82,8 @@ function HomePage() {
     return (
         <Container>
             <Menu>
-                <a className='emphasis' onClick={() => navigate('/')}> Home </a>
-                <a onClick={() => navigate('/about')}> quem somos </a>
+                <a className='emphasis' onClick={() => navigate('/')}> home </a>
+                <a onClick={() => navigate('/about')}> sobre nós </a>
 
                 <div className='division'/>
 

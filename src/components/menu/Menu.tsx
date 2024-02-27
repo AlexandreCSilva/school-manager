@@ -1,9 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Props } from '../../types';
 import styled from 'styled-components';
 import { animated, useSpring } from '@react-spring/web';
 import { useNavigate } from 'react-router-dom';
 import { IoBookSharp } from "react-icons/io5";
+import Options from './OptionsButton';
 
 const MenuBar = styled.div`
     max-height: 7vh;
@@ -21,14 +22,14 @@ const MenuBar = styled.div`
         
         * {
             margin-left: 30px;
-            font-weight: 400;
         }
 
         .division {
             width: 3px;
             height: 35px;
             border-radius: 50px;
-            background: #161618;
+            background: #0B7077;
+            font-weight: 400;
         }
 
         .emphasis {
@@ -37,7 +38,7 @@ const MenuBar = styled.div`
         
         a {
             font-weight: 700;
-            color: #161618;
+            color: #0B7077;
             cursor: pointer;
             font-size: 18px;
             transition: 0.3s;
@@ -149,13 +150,37 @@ const calc = (x: number, y: number, rect: { top: number, left: number, height: n
 const trans = (x: number, y: number, s: number) =>
     `perspective(1000px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 
+function getWindowSize() {
+    const {innerWidth, innerHeight} = window;
+    return {innerWidth, innerHeight};
+}
+
 function Menu({ children }: Props) {
+    const [windowSize, setWindowSize] = useState(getWindowSize());
+
+
+    useEffect(() => {
+        function handleWindowResize() {
+            setWindowSize(getWindowSize());
+        }
+
+        window.addEventListener('resize', handleWindowResize);
+
+        return () => {
+            window.removeEventListener('resize', handleWindowResize);
+        };
+    }, []);
+
     return (
             <MenuBar>
                 <Logo />
 
                 <div className='side-menu'>
-                    { children }
+                    { 
+                        windowSize.innerWidth > 650 
+                        ? children 
+                        : <Options />
+                    }
                 </div>
             </MenuBar>
     );
