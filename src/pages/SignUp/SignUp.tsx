@@ -4,7 +4,8 @@ import styled from "styled-components";
 import { signUpSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
 import { useNavigate } from "react-router-dom";
-import { InputStyle } from "../../components/Input";
+import { InputStyle } from "../../components/forms/Input";
+import Background from "../../components/Background";
 
 function SignUp() {
     const [ isAble, setIsAble ] = useState(true);
@@ -45,63 +46,66 @@ function SignUp() {
     };
   
     return (
-    <Wrapper>
+      <Wrapper>
         <Menu>
-            <a onClick={() => navigate('/')}> home </a>
-            <a onClick={() => navigate('/about')}> sobre nós </a>
+          <a onClick={() => navigate('/')}> home </a>
+          <a onClick={() => navigate('/about')}> sobre nós </a>
 
-            <div className='division'/>
+          <div className='division'/>
 
-            <a className="emphasis" onClick={() => navigate('/sign-up')}> registrar-se </a>
-            <button onClick={() => navigate('/')}> Login </button>
+          <a className="emphasis" onClick={() => navigate('/sign-up')}> registrar-se </a>
+          <button onClick={() => navigate('/')}> Login </button>
         </Menu>
-  
-      <div className='content'>
-        <InputStyle>
-            <form onSubmit={signUp}>
-            <input
-                type="text"
-                name="nome"
-                value={form.nome}
-                onChange={handleForm}
-                placeholder="Nome"
-                disabled={!isAble}
-            />
-            <input
-                type="text"
-                name="email"
-                value={form.email}
-                onChange={handleForm}
-                placeholder="E-mail"
-                disabled={!isAble}
-            />
-            <input
-                type="password"
-                name="senha"
-                value={form.senha}
-                onChange={handleForm}
-                placeholder="Senha"
-                disabled={!isAble}
-            />
-            <input
-                type="password"
-                name="confirmaSenha"
-                value={form.confirmaSenha}
-                onChange={handleForm}
-                placeholder="Confirme sua senha"
-                disabled={!isAble}
-            />
-            <button type="submit">
-                {isAble ? (
-                "Inscreva-se"
-                ) : (
-                "loading"
-                )}
-            </button>
-            </form>
-        </InputStyle>
-      </div>
-    </Wrapper>);
+
+        <Background />
+    
+        <div className='content'>
+          <InputStyle>
+              <form onSubmit={signUp}>
+              <input
+                  type="text"
+                  name="nome"
+                  value={form.nome}
+                  onChange={handleForm}
+                  placeholder="Nome"
+                  disabled={!isAble}
+              />
+              <input
+                  type="text"
+                  name="email"
+                  value={form.email}
+                  onChange={handleForm}
+                  placeholder="E-mail"
+                  disabled={!isAble}
+              />
+              <input
+                  type="password"
+                  name="senha"
+                  value={form.senha}
+                  onChange={handleForm}
+                  placeholder="Senha"
+                  disabled={!isAble}
+              />
+              <input
+                  type="password"
+                  name="confirmaSenha"
+                  value={form.confirmaSenha}
+                  onChange={handleForm}
+                  placeholder="Confirme sua senha"
+                  disabled={!isAble}
+              />
+              <button type="submit">
+                  {isAble ? (
+                  "Inscreva-se"
+                  ) : (
+                  "loading"
+                  )}
+              </button>
+              </form>
+          </InputStyle>
+        </div>
+      </Wrapper>
+    );
   }
   
   const Wrapper = styled.div`
@@ -114,6 +118,7 @@ function SignUp() {
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 4;
   
       form {
         max-width: 60%;

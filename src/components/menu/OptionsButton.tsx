@@ -3,35 +3,6 @@ import styled from "styled-components";
 import { IoReorderThree } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 
-const DropDownContainer = styled.div`
-    color: #0B7077;
-`;
-
-const DropDownListContainer = styled.div`
-    font-weight: 700;
-    color: #0B7077;
-    cursor: pointer;
-    font-size: 18px;
-`;
-
-const DropDownList = styled.div`
-    box-sizing: border-box;
-    transition: 0.3s;
-
-    &:first-child {
-        padding-top: 3em;
-    }
-
-    *:hover {
-        font-size: 22px;
-    }
-`;
-
-const ListItem = styled.li`
-    list-style: none;
-    margin-bottom: 0.8em;
-`;
-
 function Options() {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
@@ -71,5 +42,34 @@ function Options() {
       </DropDownContainer>
     )
 }
+
+const DropDownContainer = styled.div`
+    color: #0B7077;
+`;
+
+const DropDownListContainer = styled.div`
+    font-weight: 700;
+    color: #0B7077;
+    cursor: pointer;
+    font-size: 18px;
+`;
+
+const DropDownList = styled.div`
+    box-sizing: border-box;
+    transition: 0.3s;
+
+    &:first-child {
+        padding-top: 3em;
+    }
+
+    *:hover {
+        font-size: 22px;
+    }
+`;
+
+const ListItem = styled.li`
+    list-style: none;
+    margin-bottom: 0.8em;
+`;
 
 export default Options;
