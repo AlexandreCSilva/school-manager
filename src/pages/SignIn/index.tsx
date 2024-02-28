@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { signInSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
 import { useNavigate } from "react-router-dom";
-import Background from "../../components/Background";
-import Box from "../../components/Box";
 import Form from "../../components/forms/Form";
 import { Container } from "../../components/LayoutComponents";
 import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
+import { FaGoogle } from "react-icons/fa";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import UserContext from "../../contexts/UserContext";
+import { auth } from "../../firebase/config";
 
 function SignIn() {
+  const { setUserData } = useContext(UserContext);
   const [ isAble, setIsAble ] = useState(true);
   const [ form, setForm ] = useState({
     nome: "",
@@ -20,6 +23,7 @@ function SignIn() {
     confirmaSenha: "",
   });
   const navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
 
   function handleForm(e: any) {
     setForm({
@@ -28,13 +32,36 @@ function SignIn() {
     });
   }
 
-  const signIn = async (event: any) => {
+  const googleSignIn = async (event: React.FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
+    setIsAble(false)
 
-    const validation: any = await signInSchema.validate(form);
+    signInWithPopup(auth, provider)
+      .then((userCredential) => {
+        const user = userCredential.user
+        toast('Login realizado com sucesso!')
+        setUserData(user)
+        navigate('/')
+      })
+      .catch((error) => {
+        toast(error.message);
+        setIsAble(true);
+        return;
+      })
 
-    if (validation.error) {
-      toast(validation.error.message);
+    
+    setIsAble(true);
+  }
+
+  const signIn = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsAble(false)
+
+    try {
+      await signInSchema.validate(form);
+    } catch (error: any) {
+      toast(error.message);
+      setIsAble(true);
       return;
     }
 
@@ -44,9 +71,21 @@ function SignIn() {
       password: form.senha,
     };
 
-    //postSignIn
+    signInWithEmailAndPassword(auth, body.email, body.password)
+      .then((userCredential) => {
+        const user = userCredential.user
+        toast('Login realizado com sucesso!')
+        setUserData(user)
+        navigate('/')
+      })
+      .catch((error) => {
+        toast(error.message);
+        setIsAble(true);
+        return;
+      })
+
     
-    setIsAble(false);
+    setIsAble(true);
   };
 
   return (
@@ -86,6 +125,14 @@ function SignIn() {
           <button type="submit">
             {isAble ? (
             "Login"
+            ) : (
+            "loading"
+            )}
+          </button>
+
+          <button className='google' type='button' onClick={(e) => { googleSignIn(e) }}>
+            {isAble ? (
+              <FaGoogle />
             ) : (
             "loading"
             )}

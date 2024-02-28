@@ -1,12 +1,12 @@
 import * as Yup from "yup";
+import YupPassword from 'yup-password'
+YupPassword(Yup)
 
 const signInSchema = Yup.object({
   email: Yup.string().email().required(),
   senha: Yup.string()
-    .matches(
-    /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/,
-    "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one special case Character"
-    )
+    .password()
+    .min(8)
     .required(),
 });
 

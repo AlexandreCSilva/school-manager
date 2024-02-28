@@ -35,24 +35,10 @@ function SignUp() {
     event.preventDefault();
     setIsAble(false)
 
-    try {
-      await signUpSchema.validate(form);
-    } catch (error: any) {
-      toast(error.message);
-      setIsAble(true);
-      return;
-    }
-
-    const body = {
-      name: form.nome,
-      email: form.email,
-      password: form.senha,
-    };
-
     signInWithPopup(auth, provider)
       .then((userCredential) => {
         const user = userCredential.user
-        toast('Login realizado com sucesso!')
+        toast('Registro realizado com sucesso!')
         setUserData(user)
         navigate('/sign-in')
       })
