@@ -16,6 +16,8 @@ function Options() {
                 return '/about'
             case 'registrar-se':
                 return '/sign-up'
+            case 'login':
+                return '/sign-in'
             default:
                 return '/'
         }
@@ -25,7 +27,7 @@ function Options() {
 
     return(
         <DropDownContainer>
-            <div onClick={toggling}>
+            <div className="icon" onClick={toggling}>
                 <IoReorderThree style={{ fontSize: "4em", color: "#0B7077" }}/>
             </div>
             {isOpen && (
@@ -45,6 +47,12 @@ function Options() {
 
 const DropDownContainer = styled.div`
     color: #0B7077;
+
+    .icon:hover {
+        transition: 0.3s linear;
+        font-size: 20px;
+        cursor: pointer;
+    }
 `;
 
 const DropDownListContainer = styled.div`

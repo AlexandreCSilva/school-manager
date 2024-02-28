@@ -32,6 +32,7 @@ const FormStyle = styled.div`
         border-radius: 5px;
         font-size: 22px;
         font-weight: 500;
+        color: #0B7077;
     }
 
     input::-webkit-outer-spin-button,
@@ -44,11 +45,7 @@ const FormStyle = styled.div`
         -moz-appearance: textfield;
     }
 
-    input::placeholder {
-        color: #0B7077;
-    }
-
-     button {
+    button {
         margin: 10px 0;
         width: 100%;
         height: 58px;

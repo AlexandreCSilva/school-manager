@@ -65,8 +65,18 @@ const MenuBar = styled.div`
             font-weight: 400;
         }
 
+        button.emphasis {
+            color: #fff;
+            background: #FD661F;
+        }
+
         .emphasis {
             color: #FD661F;
+
+            button {
+                color: #fff;
+                background: #FD661F;
+            }
         }
         
         a {

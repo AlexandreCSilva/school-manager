@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import styled from "styled-components";
-import { signUpSchema } from "./schema";
+import { signInSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
 import { useNavigate } from "react-router-dom";
 import Background from "../../components/Background";
@@ -11,7 +11,7 @@ import { Container } from "../../components/LayoutComponents";
 import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
 
-function SignUp() {
+function SignIn() {
   const [ isAble, setIsAble ] = useState(true);
   const [ form, setForm ] = useState({
     nome: "",
@@ -28,10 +28,10 @@ function SignUp() {
     });
   }
 
-  const signUp = async (event: any) => {
+  const signIn = async (event: any) => {
     event.preventDefault();
 
-    const validation: any = await signUpSchema.validate(form);
+    const validation: any = await signInSchema.validate(form);
 
     if (validation.error) {
       toast(validation.error.message);
@@ -44,7 +44,7 @@ function SignUp() {
       password: form.senha,
     };
 
-    //postSignUp
+    //postSignIn
     
     setIsAble(false);
   };
@@ -57,23 +57,15 @@ function SignUp() {
 
         <div className='division'/>
 
-        <a className="emphasis" onClick={() => navigate('/sign-up')}> registrar-se </a>
-        <button onClick={() => navigate('/sign-in')}> Login </button>
+        <a onClick={() => navigate('/sign-up')}> registrar-se </a>
+        <button className="emphasis" onClick={() => navigate('/')}> Login </button>
       </Menu>
 
       <BackgroundImage />
       <BackgroundFormBox />
 
       <Form>
-        <form onSubmit={signUp}>
-          <input
-            type="text"
-            name="nome"
-            value={form.nome}
-            onChange={handleForm}
-            placeholder="Nome"
-            disabled={!isAble}
-          />
+        <form onSubmit={signIn}>
           <input
             type="text"
             name="email"
@@ -90,18 +82,10 @@ function SignUp() {
             placeholder="Senha"
             disabled={!isAble}
           />
-          <input
-            type="password"
-            name="confirmaSenha"
-            value={form.confirmaSenha}
-            onChange={handleForm}
-            placeholder="Confirme sua senha"
-            disabled={!isAble}
-          />
 
           <button type="submit">
             {isAble ? (
-            "Inscreva-se"
+            "Login"
             ) : (
             "loading"
             )}
@@ -113,4 +97,4 @@ function SignUp() {
 }
 
 
-export default SignUp;
+export default SignIn;

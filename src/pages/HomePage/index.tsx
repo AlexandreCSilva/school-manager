@@ -17,7 +17,7 @@ function HomePage() {
                 <div className='division'/>
 
                 <a onClick={() => navigate('/sign-up')}> registrar-se </a>
-                <button onClick={() => navigate('/')}> Login </button>
+                <button onClick={() => navigate('/sign-in')}> Login </button>
             </Menu>
 
             <Content>
