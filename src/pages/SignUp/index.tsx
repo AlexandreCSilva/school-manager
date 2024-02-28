@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
-import styled from "styled-components";
 import { signUpSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
 import { useNavigate } from "react-router-dom";
-import Background from "../../components/Background";
-import Box from "../../components/Box";
 import Form from "../../components/forms/Form";
 import { Container } from "../../components/LayoutComponents";
 import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase/config";
+import UserContext from "../../contexts/UserContext";
 
 function SignUp() {
+  const { setUserData } = useContext(UserContext);
   const [ isAble, setIsAble ] = useState(true);
   const [ form, setForm ] = useState({
     nome: "",
@@ -28,13 +29,15 @@ function SignUp() {
     });
   }
 
-  const signUp = async (event: any) => {
+  const signUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsAble(false)
 
-    const validation: any = await signUpSchema.validate(form);
-
-    if (validation.error) {
-      toast(validation.error.message);
+    try {
+      await signUpSchema.validate(form);
+    } catch (error: any) {
+      toast(error.message);
+      setIsAble(true);
       return;
     }
 
@@ -44,9 +47,21 @@ function SignUp() {
       password: form.senha,
     };
 
-    //postSignUp
+    createUserWithEmailAndPassword(auth, body.email, body.password)
+      .then((userCredential) => {
+        const user = userCredential.user
+        toast('Login realizado com sucesso!')
+        setUserData(user)
+        navigate('/sign-in')
+      })
+      .catch((error) => {
+        toast(error.message);
+        setIsAble(true);
+        return;
+      })
+
     
-    setIsAble(false);
+    setIsAble(true);
   };
 
   return (

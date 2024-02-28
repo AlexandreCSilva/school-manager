@@ -1,7 +1,7 @@
 import * as Yup from "yup";
 
 const signInSchema = Yup.object({
-  email: Yup.string().email(),
+  email: Yup.string().email().required(),
   senha: Yup.string()
     .matches(
     /^(?=.*[A-Za-z])(?=.*d)(?=.*[@$!%*#?&])[A-Za-zd@$!%*#?&]{8,}$/,
