@@ -72,6 +72,10 @@ const FormStyle = styled.div`
         transform: scale(1, 1.1);
         cursor: pointer;
     }
+    
+    .google {
+        font-size: 32px;
+    }
 
     @media only screen and (max-width: 870px) {
         width: 100%;

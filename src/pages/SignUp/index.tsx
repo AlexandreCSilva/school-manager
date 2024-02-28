@@ -7,9 +7,10 @@ import Form from "../../components/forms/Form";
 import { Container } from "../../components/LayoutComponents";
 import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import UserContext from "../../contexts/UserContext";
+import { FaGoogle } from "react-icons/fa";
 
 function SignUp() {
   const { setUserData } = useContext(UserContext);
@@ -21,12 +22,48 @@ function SignUp() {
     confirmaSenha: "",
   });
   const navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
 
   function handleForm(e: any) {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+  }
+
+  const googleSignUp = async (event: React.FormEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setIsAble(false)
+
+    try {
+      await signUpSchema.validate(form);
+    } catch (error: any) {
+      toast(error.message);
+      setIsAble(true);
+      return;
+    }
+
+    const body = {
+      name: form.nome,
+      email: form.email,
+      password: form.senha,
+    };
+
+    signInWithPopup(auth, provider)
+      .then((userCredential) => {
+        const user = userCredential.user
+        toast('Login realizado com sucesso!')
+        setUserData(user)
+        navigate('/sign-in')
+      })
+      .catch((error) => {
+        toast(error.message);
+        setIsAble(true);
+        return;
+      })
+
+    
+    setIsAble(true);
   }
 
   const signUp = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -117,6 +154,14 @@ function SignUp() {
           <button type="submit">
             {isAble ? (
             "Inscreva-se"
+            ) : (
+            "loading"
+            )}
+          </button>
+
+          <button className='google' type='button' onClick={(e) => { googleSignUp(e) }}>
+            {isAble ? (
+              <FaGoogle />
             ) : (
             "loading"
             )}
