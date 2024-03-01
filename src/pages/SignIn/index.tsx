@@ -25,10 +25,14 @@ function SignIn() {
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
 
-  function handleForm(e: any) {
+  function handleForm(e: React.FormEvent<HTMLInputElement>) {
+    const target = e.target as typeof e.target & {
+      name: string;
+      value: string;
+    };
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [target.name]: target.value,
     });
   }
 
