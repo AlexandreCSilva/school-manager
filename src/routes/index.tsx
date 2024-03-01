@@ -17,9 +17,8 @@ function PageRouter() {
                 <Route  path='/sign-in' element={<SignIn />}/>
 
                 <Route  path='/dashboard' element={
-                    <PrivateRoute>
                         <Dashboard />
-                    </PrivateRoute>}
+                   }
                 />
 
                 <Route  path='*' element={<Navigate to='/' />}/>

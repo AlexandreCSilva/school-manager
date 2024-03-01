@@ -11,7 +11,7 @@ const routes = function(this: any) {
         'api/dashboard/paginated', 
         (_schema: any, request: Request) => {
             const { year, size, start, names, classNames } = request.queryParams;
-            const yearFilter = Number(year) | new Date().getFullYear();
+            const yearFilter = year ? Number(year) : new Date().getFullYear();
             const nameFilter: string[] = names ? names as unknown as string[] : [];
             const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
 

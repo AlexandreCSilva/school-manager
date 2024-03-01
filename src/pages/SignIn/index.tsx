@@ -101,7 +101,7 @@ function SignIn() {
         <div className='division'/>
 
         <a onClick={() => navigate('/sign-up')}> registrar-se </a>
-        <button className="emphasis" onClick={() => navigate('/')}> Login </button>
+        <button className="emphasis"  onClick={(e) => e.detail}> Login </button>
       </Menu>
 
       <BackgroundImage />
