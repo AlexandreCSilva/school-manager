@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
-import styled from "styled-components";
 import { signInSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +11,7 @@ import { FaGoogle } from "react-icons/fa";
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import UserContext from "../../contexts/UserContext";
 import { auth } from "../../firebase/config";
+import { User } from '@firebase/auth/dist/auth-public';
 
 function SignIn() {
   const { setUserData } = useContext(UserContext);
@@ -40,8 +40,8 @@ function SignIn() {
       .then((userCredential) => {
         const user = userCredential.user
         toast('Login realizado com sucesso!')
-        setUserData(user)
-        navigate('/')
+        setUserData(user as User)
+        navigate('/dashboard')
       })
       .catch((error) => {
         toast(error.message);
@@ -75,8 +75,8 @@ function SignIn() {
       .then((userCredential) => {
         const user = userCredential.user
         toast('Login realizado com sucesso!')
-        setUserData(user)
-        navigate('/')
+        setUserData(user as User)
+        navigate('/dashboard')
       })
       .catch((error) => {
         toast(error.message);

@@ -1,8 +1,9 @@
 import React, { createContext } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { Props } from "../types";
+import { User } from '@firebase/auth/dist/auth-public';
 
-const UserContext = createContext({ userData: '', setUserData: (userData: any) => { console.log(userData) } });
+const UserContext = createContext({ userData: {} as User, setUserData: (userData: User) => { console.log(userData) } });
 export default UserContext;
 
 export function UserProvider({ children }: Props) {
