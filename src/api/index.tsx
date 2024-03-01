@@ -1,30 +1,27 @@
-import React from "react";
-import { Server, createServer } from "miragejs";
-import data, { dataType } from "./rawData";
+import React from 'react';
+import data, { dataType, fullDataType } from './rawData';
+import { Request } from 'miragejs';
 
-declare global {
-  interface Window {
-    server: Server;
-  }
+function getSemesterGradesInArray(obj: any) {
+    return Object.keys(obj).map(k => obj[k]);
 }
 
-window.server = createServer({
-  routes() {
+const routes = function(this: any) {
     this.get(
-        "/api/dashboard/paginated", 
-        (_schema, request) => {
-            const { year, size, start, name, className } = request.params;
+        'api/dashboard/paginated', 
+        (_schema: any, request: Request) => {
+            const { year, size, start, names, classNames } = request.queryParams;
             const yearFilter = Number(year) | new Date().getFullYear();
-            const nameFilter: string[] = name as unknown as string[] | [];
-            const classFilter: string[] = className as unknown as string[] | [];
-            
+            const nameFilter: string[] = names ? names as unknown as string[] : [];
+            const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
+
             const take = size ? Number(size) : 10;
             const skip = start ? Number(start) : 0;
             const currentPage = skip;
             const currentElements = currentPage * take;
-
+    
             const rawData: dataType[] = [];
-            
+
             data.forEach(dataInfo => {
                 if (dataInfo.year === yearFilter) {
                     if (classFilter.length !== 0) {
@@ -48,19 +45,55 @@ window.server = createServer({
             })
 
             const totalElements = rawData.length;
-
+    
             const elementsSliced: dataType[] =
-                rawData.slice(currentElements - take, currentElements);
+                rawData.slice(currentElements - take < 0 ? 0 : currentElements - take, currentElements + totalElements);
 
-            return {
+            const treatedData: fullDataType[] = elementsSliced.map(element => {
+                let count = 0;
+                let sum = 0;
+                let aux = [];
+
+                count = Object.keys(element.firstSemester).length;
+
+                aux = getSemesterGradesInArray(element.firstSemester);
+                aux.forEach(grade => sum += Number(grade))
+
+                const firstSemesterAverage = sum / count;
+
+                count = Object.keys(element.secondSemester).length;
+
+                sum = 0;
+
+                aux = getSemesterGradesInArray(element.secondSemester);
+                aux.forEach(grade => sum += Number(grade))
+
+                const secondSemesterAverage = sum / count;
+
+                return {
+                    ...element,
+                    firstSemester: {
+                        ...element.firstSemester,
+                        average: firstSemesterAverage
+                    },
+                    secondSemester: {
+                        ...element.secondSemester,
+                        average: secondSemesterAverage
+                    },
+                    presencePercentage: (element.presence / 200) * 100
+                }
+            })
+    
+            return JSON.stringify({
                 currentPage,
-                elements: elementsSliced,
+                elements: treatedData,
                 pageSize: take,
                 totalElements,
                 totalPages: Math.ceil(Number(totalElements) / take),
-            };
+            });
         },
         { timing: 2000 }
     )
-  },
-})
+}
+
+export { routes };
