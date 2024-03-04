@@ -41,7 +41,7 @@ function SignIn() {
         const user = userCredential.user
         toast('Login realizado com sucesso!')
         setUserData(user)
-        navigate('/')
+        navigate('/dashboard')
       })
       .catch((error) => {
         toast(error.message);
@@ -76,7 +76,7 @@ function SignIn() {
         const user = userCredential.user
         toast('Login realizado com sucesso!')
         setUserData(user)
-        navigate('/')
+        navigate('/dashboard')
       })
       .catch((error) => {
         toast(error.message);
