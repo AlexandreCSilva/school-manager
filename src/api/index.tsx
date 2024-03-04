@@ -6,6 +6,8 @@ function getSemesterGradesInArray(obj: any) {
 }
 
 const routes = function(this: any) {
+    this.passthrough("https://identitytoolkit.googleapis.com/**");
+
     this.get(
         'api/dashboard/paginated', 
         (_schema: fullDataType, request: Request) => {
