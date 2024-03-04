@@ -94,7 +94,7 @@ const MenuBar = styled.div`
         button {
             background: #0B7077;
             border-radius: 10px;
-            padding: 5px 10px;
+            padding: 12px 24px;
             font-size: 24px;
             color: #fff;
             cursor: pointer;

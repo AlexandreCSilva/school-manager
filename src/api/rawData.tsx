@@ -1,0 +1,5 @@
+const rawData = {
+
+}
+
+export { rawData };
