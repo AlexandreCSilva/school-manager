@@ -5,6 +5,7 @@ import About from '../pages/About';
 import SignUp from '../pages/SignUp';
 import SignIn from '../pages/SignIn';
 import Dashboard from '../pages/Dashboard';
+import PrivateRoute from '../components/PrivateRoute';
 
 function PageRouter() {
     return (
@@ -14,7 +15,12 @@ function PageRouter() {
                 <Route  path="/about" element={<About />}/>
                 <Route  path="/sign-up" element={<SignUp />}/>
                 <Route  path="/sign-in" element={<SignIn />}/>
-                <Route  path="/dashboard" element={<Dashboard />}/>
+                <Route  path="/dashboard" element={
+                    <PrivateRoute>
+                        <Dashboard />
+                    </PrivateRoute>
+                }/>
+                <Route  path="*" element={<HomePage />}/>
             </Routes>
         </BrowserRouter>
     );
