@@ -1,4 +1,3 @@
-import React from 'react';
 import data, { dataType, fullDataType } from './rawData';
 import { Request } from 'miragejs';
 
@@ -9,7 +8,7 @@ function getSemesterGradesInArray(obj: any) {
 const routes = function(this: any) {
     this.get(
         'api/dashboard/paginated', 
-        (_schema: any, request: Request) => {
+        (_schema: fullDataType, request: Request) => {
             const { year, size, start, names, classNames } = request.queryParams;
             const yearFilter = year ? Number(year) : new Date().getFullYear();
             const nameFilter: string[] = names ? names as unknown as string[] : [];

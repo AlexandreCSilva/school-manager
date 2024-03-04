@@ -1,5 +1,0 @@
-const rawData = {
-
-}
-
-export { rawData };

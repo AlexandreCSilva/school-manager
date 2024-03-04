@@ -19,7 +19,7 @@ export type dataType = {
     presence: number;
 };
 
-type semester = {
+export type semester = {
     mathGrade: number;
     portugueseGrade: number;
     historyGrade: number;

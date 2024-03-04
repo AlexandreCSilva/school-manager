@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { signInSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
@@ -11,7 +11,7 @@ import { FaGoogle } from "react-icons/fa";
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import UserContext from "../../contexts/UserContext";
 import { auth } from "../../firebase/config";
-import { User } from '@firebase/auth/dist/auth-public';
+import { ValidationError } from "yup";
 
 function SignIn() {
   const { setUserData } = useContext(UserContext);
@@ -25,11 +25,9 @@ function SignIn() {
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
 
-  function handleForm(e: React.FormEvent<HTMLInputElement>) {
-    const target = e.target as typeof e.target & {
-      name: string;
-      value: string;
-    };
+  function handleForm(element: ChangeEvent<HTMLInputElement>) {
+    const target = element.target as unknown as {name: string, value: string};
+
     setForm({
       ...form,
       [target.name]: target.value,
@@ -47,7 +45,7 @@ function SignIn() {
         setUserData(user)
         navigate('/dashboard')
       })
-      .catch((error: any) => {
+      .catch((error) => {
         toast(error.message);
         setIsAble(true);
         return;
@@ -63,10 +61,14 @@ function SignIn() {
 
     try {
       await signInSchema.validate(form);
-    } catch (error: any) {
-      toast(error.message);
-      setIsAble(true);
-      return;
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        toast(error.message);
+        setIsAble(true);
+        return;
+      } else {
+        console.log(error)
+      }
     }
 
     const body = {
@@ -82,7 +84,7 @@ function SignIn() {
         setUserData(user)
         navigate('/dashboard')
       })
-      .catch((error: any) => {
+      .catch((error) => {
         toast(error.message);
         setIsAble(true);
         return;

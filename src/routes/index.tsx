@@ -21,7 +21,7 @@ function PageRouter() {
                     </PrivateRoute>
                 }/>
                 
-                <Route  path="*" element={<HomePage />}/>
+                <Route  path="*" element={<Navigate to={'/'} />}/>
             </Routes>
         </BrowserRouter>
     );
