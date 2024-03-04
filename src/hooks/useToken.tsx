@@ -1,9 +1,9 @@
 import { useContext } from 'react';
 
-import UserContext from '../contexts/UserContext';
+import UserContext, { UserContextType } from '../contexts/UserContext';
 
 export default function useToken() {
-  const { userData: user } = useContext(UserContext);
+  const { userData: user } = useContext(UserContext) as UserContextType;
 
   return user.uid;
 }

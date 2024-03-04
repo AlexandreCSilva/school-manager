@@ -1,7 +1,7 @@
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext } from 'react';
 import styled from "styled-components";
 import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import UserContext from '../../contexts/UserContext';
+import UserContext, { UserContextType } from '../../contexts/UserContext';
 import { PiSignOutBold } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import { MdSpaceDashboard } from "react-icons/md";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 function SideMenu({ onPress, setOnPress }: Props) {
-    const { userData, setUserData } = useContext(UserContext);
+    const { userData, setUserData } = useContext(UserContext) as UserContextType;
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -20,10 +20,10 @@ function SideMenu({ onPress, setOnPress }: Props) {
     }
 
     const handleSignOut = () => {
-        setUserData({});
+        setUserData(null);
         navigate('/');
     }
-    
+
     return (
         <SideMenuStyle onPress={onPress} setOnPress={setOnPress}>
             <button className='logo' onClick={handleClick}>
@@ -154,6 +154,7 @@ const FooterStyle = styled.div<Props>`
         min-width: 40px;
         line-break: anywhere;
         ${(props) => props.onPress ? '' : 'display: none'}
+        color: #fff;
     }
 
     img {

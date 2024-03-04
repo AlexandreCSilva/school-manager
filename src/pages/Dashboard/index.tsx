@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SideMenu from '../../components/menu/SideMenu';
 import { Container } from '../../components/LayoutComponents';
 import { BaseBox, ContentBox } from '../../components/ContentBox';
+import { toast } from 'react-toastify';
 
 function Dashboard() {
     const [onPress, setOnPress] = useState(true);
@@ -13,6 +14,10 @@ function Dashboard() {
       .then((json) => {
         setData(json)
       })
+      .catch((error) => {
+        toast('error on get api data')
+        console.log(error.message)
+      })
     }, [])
     
     return (
@@ -21,7 +26,7 @@ function Dashboard() {
 
           <ContentBox>
             <BaseBox onPress={onPress} setOnPress={setOnPress}>
-              a
+              {data ? JSON.stringify(data) : 'a'}
             </BaseBox>
           </ContentBox>
       </Container>

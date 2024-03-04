@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { toast } from "react-toastify";
-import styled from "styled-components";
 import { signInSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +9,12 @@ import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
 import { FaGoogle } from "react-icons/fa";
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import UserContext from "../../contexts/UserContext";
+import UserContext, { UserContextType } from "../../contexts/UserContext";
 import { auth } from "../../firebase/config";
+import { ValidationError } from "yup";
 
 function SignIn() {
-  const { setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext) as UserContextType;
   const [ isAble, setIsAble ] = useState(true);
   const [ form, setForm ] = useState({
     nome: "",
@@ -25,10 +25,11 @@ function SignIn() {
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
 
-  function handleForm(e: any) {
+  function handleForm(element: ChangeEvent<HTMLInputElement>) {
+    const target = element.target as unknown as { name: string, value: string }
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [target.name]: target.value,
     });
   }
 
@@ -59,10 +60,14 @@ function SignIn() {
 
     try {
       await signInSchema.validate(form);
-    } catch (error: any) {
-      toast(error.message);
-      setIsAble(true);
-      return;
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        toast(error.message);
+        setIsAble(true);
+        return;
+      } else {
+        console.log(error)
+      }
     }
 
     const body = {

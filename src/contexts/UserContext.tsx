@@ -1,9 +1,11 @@
 import React, { createContext } from 'react';
 import useLocalStorage from '../hooks/useLocalStorage';
 import { Props } from "../types";
-import { User } from "firebase/auth";
+import { User } from 'firebase/auth';
 
-const UserContext = createContext<any | null>(null);
+export type UserContextType = { userData: User, setUserData: (user: User | null) => void }
+
+const UserContext = createContext<UserContextType | null>(null);
 export default UserContext;
 
 export function UserProvider({ children }: Props) {

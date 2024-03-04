@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { signUpSchema } from "./schema";
 import Menu from "../../components/menu/Menu";
@@ -9,11 +9,12 @@ import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase/config";
-import UserContext from "../../contexts/UserContext";
+import UserContext, { UserContextType } from "../../contexts/UserContext";
 import { FaGoogle } from "react-icons/fa";
+import { ValidationError } from "yup";
 
 function SignUp() {
-  const { setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext) as UserContextType;
   const [ isAble, setIsAble ] = useState(true);
   const [ form, setForm ] = useState({
     nome: "",
@@ -24,10 +25,11 @@ function SignUp() {
   const navigate = useNavigate();
   const provider = new GoogleAuthProvider();
 
-  function handleForm(e: any) {
+  function handleForm(element: ChangeEvent<HTMLInputElement>) {
+    const target = element.target as unknown as { name: string, value: string }
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [target.name]: target.value,
     });
   }
 
@@ -58,10 +60,14 @@ function SignUp() {
 
     try {
       await signUpSchema.validate(form);
-    } catch (error: any) {
-      toast(error.message);
-      setIsAble(true);
-      return;
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        toast(error.message);
+        setIsAble(true);
+        return;
+      } else {
+        console.log(error)
+      }
     }
 
     const body = {
