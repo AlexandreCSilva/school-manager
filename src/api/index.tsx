@@ -93,8 +93,38 @@ const routes = function(this: any) {
                 totalPages: Math.ceil(Number(totalElements) / take),
             });
         },
-        { timing: 2000 }
-    )
+        { timing: 1000 }
+    );
+
+    this.get(
+        'api/students',
+        (_schema: fullDataType, request: Request) => {
+            const { year, classNames } = request.queryParams;
+            const yearFilter: number | undefined = year ? year as unknown as number : undefined;
+            const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
+
+            const rawData: string[] = [];
+
+            data.forEach((dataInfo) => {
+                if (!rawData.includes(dataInfo.name)) {
+                    if (yearFilter && dataInfo.year === yearFilter) {
+                        if (classFilter && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
+                            rawData.push(dataInfo.name);
+                        } else {
+                            rawData.push(dataInfo.name);
+                        }
+                    } else if (classFilter && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
+                        rawData.push(dataInfo.name);
+                    } else {
+                        rawData.push(dataInfo.name);
+                    }
+                }
+            })
+
+            return rawData;
+        },
+        { timing: 1000 }
+    );
 }
 
 export { routes };

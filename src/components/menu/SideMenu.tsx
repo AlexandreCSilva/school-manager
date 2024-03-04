@@ -153,12 +153,12 @@ const FooterStyle = styled.div<Props>`
         width: 120px;
         min-width: 40px;
         line-break: anywhere;
-        ${(props) => props.onPress ? '' : 'display: none'}
+        ${(props) => props.onPress ? '' : 'display: none;'}
         color: #fff;
     }
 
     img {
-        ${(props) => props.onPress ? '' : 'display: none'}
+        ${(props) => props.onPress ? '' : 'display: none;'}
     }
 
     button {

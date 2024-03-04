@@ -40,7 +40,7 @@ function Logo() {
         setHovered(false);
     };
     
-    const handleMouseMove = (e: any) => {
+    const handleMouseMove = (e: { clientX: number, clientY: number}) => {
         const rect = cardRef.current.getBoundingClientRect();
         api.start({
             xys: calc(e.clientX, e.clientY, rect)

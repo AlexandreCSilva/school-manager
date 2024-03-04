@@ -1,15 +1,5 @@
-export type fullDataType = {
-    name: string;
-    phoneNumber: string;
-    year: number;
-    class: string;
-    firstSemester: semester | { average: string };
-    secondSemester: semester | { average: string };
-    presence: number;
-    presencePercentage: number;
-}
-
 export type dataType = {
+    studentId: number;
     name: string;
     phoneNumber: string;
     year: number;
@@ -18,6 +8,12 @@ export type dataType = {
     secondSemester: semester;
     presence: number;
 };
+
+export interface fullDataType extends Omit<dataType, 'firstSemester' | 'secondSemester' > {
+    firstSemester: semester | { average: string };
+    secondSemester: semester | { average: string };
+    presencePercentage: number;
+}
 
 type semester = {
     mathGrade: number;
@@ -37,6 +33,7 @@ type semester = {
 
 const data = [
     {
+        studentId: 1,
         name: 'João Lucas',
         phoneNumber: '(12) 93456-7890',
         year: 2024,
@@ -74,6 +71,7 @@ const data = [
         presence: 184, 
     },
     {
+        studentId: 1,
         name: 'João Lucas',
         phoneNumber: '(12) 93456-7890',
         year: 2023,
@@ -111,6 +109,7 @@ const data = [
         presence: 188, 
     },
     {
+        studentId: 2,
         name: 'Maria Fernanda',
         phoneNumber: '(13) 99876-5432',
         year: 2024,
