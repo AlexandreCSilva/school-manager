@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import SideMenu from '../../components/menu/SideMenu';
+import SideMenu from '../../components/dashboard/SideMenu';
 import { Container } from '../../components/LayoutComponents';
+import { BaseBox, ContentBox } from '../../components/dashboard/ContentBox';
 
 function Dashboard() {
+    const [onPress, setOnPress] = useState(true);
     const [data, setData] = useState({})
 
     useEffect(() => {
@@ -15,7 +17,13 @@ function Dashboard() {
     
     return (
       <Container>
-          <SideMenu />
+          <SideMenu onPress={onPress} setOnPress={setOnPress}/>
+
+          <ContentBox>
+            <BaseBox onPress={onPress} setOnPress={setOnPress}>
+              a
+            </BaseBox>
+          </ContentBox>
       </Container>
     )
 };

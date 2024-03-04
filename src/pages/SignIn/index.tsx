@@ -47,7 +47,7 @@ function SignIn() {
         setUserData(user as User)
         navigate('/dashboard')
       })
-      .catch((error) => {
+      .catch((error: any) => {
         toast(error.message);
         setIsAble(true);
         return;
@@ -82,7 +82,7 @@ function SignIn() {
         setUserData(user as User)
         navigate('/dashboard')
       })
-      .catch((error) => {
+      .catch((error: any) => {
         toast(error.message);
         setIsAble(true);
         return;

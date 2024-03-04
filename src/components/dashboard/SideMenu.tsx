@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
 import styled from "styled-components";
 import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import UserContext from '../../contexts/UserContext';
@@ -8,10 +8,10 @@ import { MdSpaceDashboard } from "react-icons/md";
 
 interface Props {
     onPress: boolean;
+    setOnPress: Dispatch<SetStateAction<boolean>>;
 }
 
-function SideMenu() {
-    const [onPress, setOnPress] = useState(true);
+function SideMenu({ onPress, setOnPress }: Props) {
     const { userData, setUserData } = useContext(UserContext);
     const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ function SideMenu() {
     }
     
     return (
-        <SideMenuStyle onPress={onPress}>
+        <SideMenuStyle onPress={onPress} setOnPress={setOnPress}>
             <button className='logo' onClick={handleClick}>
                 {onPress 
                     ? <div className='content'>
@@ -40,14 +40,14 @@ function SideMenu() {
 
             <div className='division' />
 
-            <OptionsStyle onPress={onPress}>
+            <OptionsStyle onPress={onPress} setOnPress={setOnPress}>
                 <button onClick={() => navigate('/dashboard')}>
                     <MdSpaceDashboard />
                 </button>
                 <a onClick={() => navigate('/dashboard')}>Dashboard</a>
             </OptionsStyle>
 
-            <FooterStyle onPress={onPress}>
+            <FooterStyle onPress={onPress} setOnPress={setOnPress}>
                 <img src={userData.photoURL as string} />
                 <p>{userData.email}</p>
                 <button onClick={handleSignOut}>
@@ -64,6 +64,8 @@ const SideMenuStyle = styled.div<Props>`
     height: 100vh;
     display: block;
     transition: 0.25s linear;
+    z-index: 5;
+    position: relative;
 
     .division {
         width: 100%;
