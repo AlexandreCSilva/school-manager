@@ -44,7 +44,7 @@ function SignIn() {
       .then((userCredential) => {
         const user = userCredential.user
         toast('Login realizado com sucesso!')
-        setUserData(user as User)
+        setUserData(user)
         navigate('/dashboard')
       })
       .catch((error: any) => {
@@ -79,7 +79,7 @@ function SignIn() {
       .then((userCredential) => {
         const user = userCredential.user
         toast('Login realizado com sucesso!')
-        setUserData(user as User)
+        setUserData(user)
         navigate('/dashboard')
       })
       .catch((error: any) => {

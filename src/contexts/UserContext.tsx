@@ -7,7 +7,7 @@ const UserContext = createContext({ userData: {} as User, setUserData: (userData
 export default UserContext;
 
 export function UserProvider({ children }: Props) {
-  const [userData, setUserData] = useLocalStorage('userData', {});
+  const [userData, setUserData] = useLocalStorage('userData', null);
   
   return (
     <UserContext.Provider value={{ userData, setUserData }}>

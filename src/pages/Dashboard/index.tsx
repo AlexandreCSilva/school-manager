@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import SideMenu from '../../components/dashboard/SideMenu';
+import SideMenu from '../../components/menu/SideMenu';
 import { Container } from '../../components/LayoutComponents';
-import { BaseBox, ContentBox } from '../../components/dashboard/ContentBox';
+import { BaseBox, ContentBox } from '../../components/ContentBox';
 
 function Dashboard() {
     const [onPress, setOnPress] = useState(true);
