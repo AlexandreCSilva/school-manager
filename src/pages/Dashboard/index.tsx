@@ -26,7 +26,7 @@ function Dashboard() {
 
           <ContentBox>
             <BaseBox onPress={onPress} setOnPress={setOnPress}>
-              {JSON.stringify(data)}
+              {data ? 'a' : JSON.stringify(data)}
             </BaseBox>
           </ContentBox>
       </Container>
