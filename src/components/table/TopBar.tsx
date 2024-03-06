@@ -11,13 +11,13 @@ function TopBar({ children }: Props) {
 };
 
 const TopBarStyle = styled.div`
-    width: 100%;
+    width: calc(100% - 60px);
     min-height: 90px;
     border-radius: 50px 50px 0 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 30px 0;
+    padding: 30px;
 
     border-bottom: 4px solid #90dae4;
 

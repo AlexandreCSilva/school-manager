@@ -55,8 +55,9 @@ function SelectMultiple({ values, text, size, selectedValues, setSelectedValues 
           sx={{
             borderRadius: 0,
             width: size,
+            color: '#05434b',
             "& MuiList-root": {
-              color: '#0B7077'
+              color: '#0B7077',
             },
             '.MuiOutlinedInput-notchedOutline': {
               border: 0,
@@ -76,9 +77,6 @@ function SelectMultiple({ values, text, size, selectedValues, setSelectedValues 
             '.MuiSvgIcon-root ': {
               fill: "#0B7077",
             },
-            ".MuiMenuItem-root .MuiMenuItem-gutters": {
-              backgroundColor: "#e21919",
-            },
           }}
         >
           {values.map((value) => (
@@ -86,7 +84,8 @@ function SelectMultiple({ values, text, size, selectedValues, setSelectedValues 
               key={value}
               value={value}
               sx={{
-                width: size - 10
+                width: size - 10,
+                color: '#05434b',
               }}
             >
               {value}

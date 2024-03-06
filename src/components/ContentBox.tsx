@@ -52,6 +52,7 @@ const BaseBoxStyle = styled.div<ClickProps>`
 
     .content {
         padding: 30px;
+        position: relative;
     }
 
     @media only screen and (max-width: 1100px) {
@@ -63,6 +64,10 @@ const BaseBoxStyle = styled.div<ClickProps>`
         width: 100%;
         height: 100%;
         border-radius: 0;
+
+        .content {
+            height: 57%;
+        }
     }
 `
 export { ContentBox, BaseBox };

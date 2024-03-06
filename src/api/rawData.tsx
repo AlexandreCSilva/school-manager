@@ -15,6 +15,14 @@ export interface fullDataType extends Omit<dataType, 'firstSemester' | 'secondSe
     presencePercentage: number;
 }
 
+export type PaginatedFullDataType = {
+    currentPage: number;
+    elements: fullDataType[];
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
+}
+
 type semester = {
     mathGrade: number;
     portugueseGrade: number;

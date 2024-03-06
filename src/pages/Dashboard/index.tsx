@@ -6,7 +6,9 @@ import { toast } from 'react-toastify';
 import TopBar from '../../components/table/TopBar';
 import SliderOptions from '../../components/table/SliderButton';
 import SelectMultiple from '../../components/table/SelectMultiple';
-import { Grid, Stack } from '@mui/material';
+import { Grid, TableCell, TableRow, } from '@mui/material';
+import { PaginatedFullDataType, fullDataType } from '../../api/rawData';
+import TablePaginated, { Column } from '../../components/table/TablePaginated';
 
 function Dashboard() {
     const [onPress, setOnPress] = useState(true);
@@ -18,6 +20,8 @@ function Dashboard() {
     const [selectedyears, setSelectedYears] = useState<number[]>([])
     const [selectedclasses, setSelectedClasses] = useState<string[]>([])
     const [onSlide, setOnSlide] = useState('Aprovado');
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     useEffect(() => {
       fetch("/api/students/paginated")
@@ -65,30 +69,18 @@ function Dashboard() {
       let strFilter = '';
 
       selectedyears.forEach((year) => {
-        if (strFilter === '') {
-          strFilter = '?years[]=' + year
-        } else {
-          strFilter = strFilter + '&years[]=' + year
-        }
+        strFilter = strFilter + '&years[]=' + year
       })
 
       selectedstudents.forEach((student) => {
-        if (strFilter === '') {
-          strFilter = '?names[]=' + student
-        } else {
-          strFilter = strFilter + '&names[]=' + student
-        }
+        strFilter = strFilter + '&names[]=' + student
       })
 
       selectedclasses.forEach((className) => {
-        if (strFilter === '') {
-          strFilter = '?classes[]=' + className
-        } else {
-          strFilter = strFilter + '&classes[]=' + className
-        }
+        strFilter = strFilter + '&classes[]=' + className
       })
 
-      fetch("/api/students/paginated" + strFilter)
+      fetch("/api/students/paginated?size=" + rowsPerPage + '&start=' + page + strFilter)
         .then((res) => res.json())
         .then((json) => {
           setData(json)
@@ -97,7 +89,38 @@ function Dashboard() {
           toast('error on get api data')
           console.log(error.message)
         })
+
+      if (strFilter !== '') {
+        strFilter = '?' + strFilter.substring(1)
+      }
+
+      fetch("/api/students" + strFilter)
+        .then((res) => res.json())
+        .then((json) => {
+          setStudents(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
+
+      fetch("/api/classes" + strFilter)
+        .then((res) => res.json())
+        .then((json) => {
+          setClasses(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
     }
+
+    
+    const columns: Column[] = [
+      { id: 'name', label: 'Nome', minWidth: 170, align: 'left' },
+      { id: 'class', label: 'Classe', minWidth: 80, align: 'center' },
+      { id: 'phoneNumber', label: 'Celular', minWidth: 100, align: 'center'  },
+    ];
     
     return (
       <Container>
@@ -149,7 +172,30 @@ function Dashboard() {
               </TopBar>
               
               <div className='content'>
-                {data ? JSON.stringify(data) : ''}
+                <TablePaginated 
+                  columns={columns}
+                  length={(data as PaginatedFullDataType).totalElements}
+                  page={page}
+                  setPage={setPage}
+                  rowsPerPage={rowsPerPage}
+                  setRowsPerPage={setRowsPerPage}
+                >
+                  {(data as PaginatedFullDataType).elements
+                    ? (data as PaginatedFullDataType).elements.map((row: fullDataType) => {return (
+                        <TableRow key={row.name}>
+                            <TableCell component="th" scope="row" align={columns[0].align}>
+                                {row.name}
+                            </TableCell>
+                            <TableCell style={{ width: 160 }} align={columns[1].align}>
+                                {row.class}
+                            </TableCell>
+                            <TableCell style={{ width: 160 }} align={columns[2].align} >
+                                {row.phoneNumber}
+                            </TableCell>
+                        </TableRow>
+                    )})
+                    : ''}
+                </TablePaginated>
               </div>
             </BaseBox>
           </ContentBox>

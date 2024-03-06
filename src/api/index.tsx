@@ -101,14 +101,16 @@ const routes = function(this: any) {
         'api/students',
         (_schema: fullDataType, request: Request) => {
             const { years, classNames } = request.queryParams;
-            const yearFilter: number | undefined = years ? years as unknown as number : undefined;
+            const yearFilter: number[] = years 
+                ? (years as string[]).map((year: string) => Number(year)) 
+                : [];
             const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
 
             const rawData: string[] = [];
 
             data.forEach((dataInfo) => {
                 if (!rawData.includes(dataInfo.name)) {
-                    if (yearFilter && dataInfo.year === yearFilter) {
+                    if (yearFilter.length !== 0 && yearFilter.includes(dataInfo.year)) {
                         if (classFilter && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
                             rawData.push(dataInfo.name);
                         } else {
