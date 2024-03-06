@@ -6,12 +6,14 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 type Props = {
+  size: number;
   text: string;
-  values: string[]
+  values: string[] | number[];
+  selectedValues: any;
+  setSelectedValues: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-function SelectMultiple({ values, text }: Props) {
-  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
+function SelectMultiple({ values, text, size, selectedValues, setSelectedValues }: Props) {
 
   const handleChange = (event: SelectChangeEvent<typeof selectedValues>) => {
     const { target: { value } } = event;
@@ -25,7 +27,7 @@ function SelectMultiple({ values, text }: Props) {
     <div>
       <FormControl 
         sx={{ 
-          width: 150,
+          width: size,
           maxHeight: 50,
           "& label.Mui-focused": {
             color: '#0B7077'
@@ -52,7 +54,7 @@ function SelectMultiple({ values, text }: Props) {
           inputProps={{ 'aria-label': 'Without label' }}
           sx={{
             borderRadius: 0,
-            width: 120,
+            width: size,
             "& MuiList-root": {
               color: '#0B7077'
             },
@@ -84,7 +86,7 @@ function SelectMultiple({ values, text }: Props) {
               key={value}
               value={value}
               sx={{
-                width: 110
+                width: size - 10
               }}
             >
               {value}

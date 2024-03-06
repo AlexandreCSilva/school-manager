@@ -6,15 +6,21 @@ import { toast } from 'react-toastify';
 import TopBar from '../../components/table/TopBar';
 import SliderOptions from '../../components/table/SliderButton';
 import SelectMultiple from '../../components/table/SelectMultiple';
+import { Grid, Stack } from '@mui/material';
 
 function Dashboard() {
     const [onPress, setOnPress] = useState(true);
     const [data, setData] = useState({})
     const [students, setStudents] = useState<string[]>([])
+    const [years, setYears] = useState<number[]>([])
+    const [classes, setClasses] = useState<string[]>([])
+    const [selectedstudents, setSelectedStudents] = useState<string[]>([])
+    const [selectedyears, setSelectedYears] = useState<number[]>([])
+    const [selectedclasses, setSelectedClasses] = useState<string[]>([])
     const [onSlide, setOnSlide] = useState('Aprovado');
 
     useEffect(() => {
-      fetch("/api/dashboard/paginated")
+      fetch("/api/students/paginated")
         .then((res) => res.json())
         .then((json) => {
           setData(json)
@@ -33,11 +39,65 @@ function Dashboard() {
           toast('error on get api data')
           console.log(error.message)
         })
+
+      fetch("/api/years")
+        .then((res) => res.json())
+        .then((json) => {
+          setYears(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
+
+      fetch("/api/classes")
+        .then((res) => res.json())
+        .then((json) => {
+          setClasses(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
     }, [])
 
-    useEffect(() => {
-      console.log(onSlide)
-    }, [onSlide])
+    const handleFilter = () => {
+      let strFilter = '';
+
+      selectedyears.forEach((year) => {
+        if (strFilter === '') {
+          strFilter = '?years[]=' + year
+        } else {
+          strFilter = strFilter + '&years[]=' + year
+        }
+      })
+
+      selectedstudents.forEach((student) => {
+        if (strFilter === '') {
+          strFilter = '?names[]=' + student
+        } else {
+          strFilter = strFilter + '&names[]=' + student
+        }
+      })
+
+      selectedclasses.forEach((className) => {
+        if (strFilter === '') {
+          strFilter = '?classes[]=' + className
+        } else {
+          strFilter = strFilter + '&classes[]=' + className
+        }
+      })
+
+      fetch("/api/students/paginated" + strFilter)
+        .then((res) => res.json())
+        .then((json) => {
+          setData(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
+    }
     
     return (
       <Container>
@@ -49,12 +109,48 @@ function Dashboard() {
                 <h1>Visão geral</h1>
 
                 <div className='right-content'>
-                  <SelectMultiple values={students} text='Ano' />
-                  <SelectMultiple values={students} text='Nome' />
-                  <SliderOptions setOnSlide={setOnSlide} />
+                  <Grid container justifyContent="flex-end" spacing={2}>
+                    <Grid item>
+                      <SelectMultiple
+                        values={years} 
+                        text='Ano' 
+                        size={90}
+                        selectedValues={selectedyears}
+                        setSelectedValues={setSelectedYears} 
+                      />
+                    </Grid>
+                    <Grid item>
+                      <SelectMultiple 
+                        values={students} 
+                        text='Nome' 
+                        size={150}
+                        selectedValues={selectedstudents}
+                        setSelectedValues={setSelectedStudents}  
+                      />
+                    </Grid>
+                    <Grid item>
+                      <SelectMultiple 
+                        values={classes} 
+                        text='Classe' 
+                        size={110}
+                        selectedValues={selectedclasses}
+                        setSelectedValues={setSelectedClasses} 
+                      />
+                    </Grid>
+                    <Grid item>
+                      <SliderOptions setOnSlide={setOnSlide} />
+                    </Grid>
+
+                    <Grid item>
+                      <button onClick={handleFilter}>filtrar</button>
+                    </Grid>
+                  </Grid>
                 </div>
               </TopBar>
-              {data ? JSON.stringify(data) : 'a'}
+              
+              <div className='content'>
+                {data ? JSON.stringify(data) : ''}
+              </div>
             </BaseBox>
           </ContentBox>
       </Container>

@@ -9,22 +9,24 @@ const routes = function(this: any) {
     this.passthrough("https://identitytoolkit.googleapis.com/**");
 
     this.get(
-        'api/dashboard/paginated', 
+        'api/students/paginated', 
         (_schema: fullDataType, request: Request) => {
-            const { year, size, start, names, classNames } = request.queryParams;
-            const yearFilter = year ? Number(year) : new Date().getFullYear();
+            const { years, size, start, names, classes } = request.queryParams;
+            const yearFilter: number[] = years 
+                ? (years as string[]).map((year: string) => Number(year)) 
+                : [new Date().getFullYear()];
             const nameFilter: string[] = names ? names as unknown as string[] : [];
-            const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
+            const classFilter: string[] = classes ? classes as unknown as string[] : [];
 
             const take = size ? Number(size) : 10;
             const skip = start ? Number(start) : 0;
             const currentPage = skip;
             const currentElements = currentPage * take;
-    
+
             const rawData: dataType[] = [];
 
             data.forEach(dataInfo => {
-                if (dataInfo.year === yearFilter) {
+                if (yearFilter.includes(dataInfo.year)) {
                     if (classFilter.length !== 0) {
                         if (classFilter.includes(dataInfo.class)) {
                             if (nameFilter.length !== 0) {
@@ -92,12 +94,85 @@ const routes = function(this: any) {
                 totalElements,
                 totalPages: Math.ceil(Number(totalElements) / take),
             });
+        }
+    );
+
+    this.get(
+        'api/students',
+        (_schema: fullDataType, request: Request) => {
+            const { years, classNames } = request.queryParams;
+            const yearFilter: number | undefined = years ? years as unknown as number : undefined;
+            const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
+
+            const rawData: string[] = [];
+
+            data.forEach((dataInfo) => {
+                if (!rawData.includes(dataInfo.name)) {
+                    if (yearFilter && dataInfo.year === yearFilter) {
+                        if (classFilter && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
+                            rawData.push(dataInfo.name);
+                        } else {
+                            rawData.push(dataInfo.name);
+                        }
+                    } else if (classFilter.length !== 0 && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
+                        rawData.push(dataInfo.name);
+                    } else {
+                        rawData.push(dataInfo.name);
+                    }
+                }
+            })
+
+            return rawData;
+        }
+    );
+
+    this.get(
+        'api/classes',
+        (_schema: fullDataType, request: Request) => {
+            const { years, names } = request.queryParams;
+            const yearFilter: number | undefined = years ? years as unknown as number : undefined;
+            const namesFilter: string[] = names ? names as unknown as string[] : [];
+
+            const rawData: string[] = [];
+
+            data.forEach((dataInfo) => {
+                if (!rawData.includes(dataInfo.class)) {
+                    if (yearFilter && dataInfo.year === yearFilter) {
+                        if (yearFilter && yearFilter === dataInfo.year) {
+                            rawData.push(dataInfo.class);
+                        } else {
+                            rawData.push(dataInfo.class);
+                        }
+                    } else if (namesFilter.length !== 0 && namesFilter.includes(dataInfo.name)) {
+                        rawData.push(dataInfo.class);
+                    } else {
+                        rawData.push(dataInfo.class);
+                    }
+                }
+            })
+
+            return rawData;
         },
         { timing: 1000 }
     );
 
     this.get(
-        'api/students',
+        'api/years',
+        () => {
+            const rawData: number[] = [];
+
+            data.forEach((dataInfo) => {
+                if (!rawData.includes(dataInfo.year)) {
+                    rawData.push(dataInfo.year);
+                }
+            })
+
+            return rawData;
+        }
+    );
+
+    this.get(
+        'api/phones',
         (_schema: fullDataType, request: Request) => {
             const { year, classNames } = request.queryParams;
             const yearFilter: number | undefined = year ? year as unknown as number : undefined;
@@ -122,8 +197,7 @@ const routes = function(this: any) {
             })
 
             return rawData;
-        },
-        { timing: 1000 }
+        }
     );
 }
 
