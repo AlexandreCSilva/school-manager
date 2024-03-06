@@ -4,7 +4,7 @@ import HomePage from '../pages/HomePage';
 import About from '../pages/About';
 import SignUp from '../pages/SignUp';
 import SignIn from '../pages/SignIn';
-import Dashboard from '../pages/Dashboard';
+import Overview from '../pages/Overview';
 import PrivateRoute from '../components/PrivateRoute';
 
 function PageRouter() {
@@ -15,9 +15,9 @@ function PageRouter() {
                 <Route  path="/about" element={<About />}/>
                 <Route  path="/sign-up" element={<SignUp />}/>
                 <Route  path="/sign-in" element={<SignIn />}/>
-                <Route  path="/dashboard" element={
+                <Route  path="/overview" element={
                     <PrivateRoute>
-                        <Dashboard />
+                        <Overview />
                     </PrivateRoute>
                 }/>
                 <Route  path="*" element={<HomePage />}/>

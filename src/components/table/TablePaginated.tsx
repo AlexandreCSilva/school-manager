@@ -104,50 +104,78 @@ function TableFooter({ length, page, rowsPerPage, setPage, setRowsPerPage }: Pro
     };
 
     return (
-        <TablePagination
-            rowsPerPageOptions={[5, 10]}
-            colSpan={3}
-            count={length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            slotProps={{
-                select: {
-                inputProps: {
-                    'aria-label': 'rows per page',
-                },
-                native: true,
-                },
-            }}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            ActionsComponent={TablePaginationActions}
-            sx={{
-                color: '#05434b',
-                borderBottom: 0,
-                borderTop: '4px solid #90dae4',
-                width: '100%',
-                position: 'absolute',
-                bottom: 0,
-                left: -0,
+        <div className='footer'>
+            <TablePagination
+                rowsPerPageOptions={[5, 10]}
+                colSpan={3}
+                count={length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                slotProps={{
+                    select: {
+                    inputProps: {
+                        'aria-label': 'rows per page',
+                    },
+                    native: true,
+                    },
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+                sx={{
+                    color: '#05434b',
+                    borderBottom: 0,
+                    borderTop: '4px solid #90dae4',
+                    width: '100%',
+                    position: 'absolute',
+                    bottom: 0,
+                    left: -0,
 
-                '& .MuiToolbar-root': {
-                    paddingRight: '50px',
-                }
-            }}
-        />
+                    '& .MuiToolbar-root': {
+                        paddingRight: '50px',
+                    }
+                }}
+            />
+        </div>
     );
 };
 
 function TablePaginated({ columns, children, length, page, setPage, rowsPerPage, setRowsPerPage }: TableProps) {
+    const theme = createTheme({
+        breakpoints: {
+          values: {
+            xs: 600,
+            sm: 710,
+            md: 860,
+            lg: 920,
+            xl: 1100,
+          },
+        },
+    });
+
+      
     return(
         <TableContainer 
             sx={{ 
-                marginBottom: 30,
-                borderRadius: 10,
-                width: 1,
+                marginBottom: 60,
+                [theme.breakpoints.down('xl')]: {
+                    marginBottom: 55,
+                },
+                [theme.breakpoints.down('lg')]: {
+                    marginBottom: 48,
+                },
+                [theme.breakpoints.down('md')]: {
+                    marginBottom: 40,
+                },
+                [theme.breakpoints.down('sm')]: {
+                    marginBottom: 36,
+                },
+                [theme.breakpoints.down('xs')]: {
+                    marginBottom: 24,
+                },
             }}
         >
-            <Table sx={{width: 1 }}>
+            <Table>
                 <TableHead>
                     <TableRow>
                         {columns.map((column) => (

@@ -10,7 +10,7 @@ import { Grid, TableCell, TableRow, } from '@mui/material';
 import { PaginatedFullDataType, fullDataType } from '../../api/rawData';
 import TablePaginated, { Column } from '../../components/table/TablePaginated';
 
-function Dashboard() {
+function Overview() {
     const [onPress, setOnPress] = useState(true);
     const [data, setData] = useState({})
     const [students, setStudents] = useState<string[]>([])
@@ -23,6 +23,38 @@ function Dashboard() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+    const getFilters = (str: string) => {
+      fetch("/api/students" + str)
+        .then((res) => res.json())
+        .then((json) => {
+          setStudents(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
+
+      fetch("/api/years" + str)
+        .then((res) => res.json())
+        .then((json) => {
+          setYears(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
+
+      fetch("/api/classes" + str)
+        .then((res) => res.json())
+        .then((json) => {
+          setClasses(json)
+        })
+        .catch((error) => {
+          toast('error on get api data')
+          console.log(error.message)
+        })
+    };
+
     useEffect(() => {
       fetch("/api/students/paginated")
         .then((res) => res.json())
@@ -34,35 +66,7 @@ function Dashboard() {
           console.log(error.message)
         })
       
-      fetch("/api/students")
-        .then((res) => res.json())
-        .then((json) => {
-          setStudents(json)
-        })
-        .catch((error) => {
-          toast('error on get api data')
-          console.log(error.message)
-        })
-
-      fetch("/api/years")
-        .then((res) => res.json())
-        .then((json) => {
-          setYears(json)
-        })
-        .catch((error) => {
-          toast('error on get api data')
-          console.log(error.message)
-        })
-
-      fetch("/api/classes")
-        .then((res) => res.json())
-        .then((json) => {
-          setClasses(json)
-        })
-        .catch((error) => {
-          toast('error on get api data')
-          console.log(error.message)
-        })
+      getFilters('')
     }, [])
 
     const handleFilter = () => {
@@ -94,25 +98,7 @@ function Dashboard() {
         strFilter = '?' + strFilter.substring(1)
       }
 
-      fetch("/api/students" + strFilter)
-        .then((res) => res.json())
-        .then((json) => {
-          setStudents(json)
-        })
-        .catch((error) => {
-          toast('error on get api data')
-          console.log(error.message)
-        })
-
-      fetch("/api/classes" + strFilter)
-        .then((res) => res.json())
-        .then((json) => {
-          setClasses(json)
-        })
-        .catch((error) => {
-          toast('error on get api data')
-          console.log(error.message)
-        })
+      getFilters(strFilter)
     }
 
     
@@ -203,4 +189,4 @@ function Dashboard() {
     )
 };
 
-export default Dashboard;
+export default Overview;

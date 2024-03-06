@@ -49,10 +49,22 @@ const BaseBoxStyle = styled.div<ClickProps>`
     border-radius: 50px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
     overflow: hidden;
+    position: relative;
 
     .content {
         padding: 30px;
-        position: relative;
+        width: auto;
+        height: auto;
+
+       
+    }
+    
+    .footer {
+        position: absolute;
+        width: 110%;
+        height: 90px;
+        bottom: 0px;
+        left: -10%;
     }
 
     @media only screen and (max-width: 1100px) {
@@ -66,7 +78,11 @@ const BaseBoxStyle = styled.div<ClickProps>`
         border-radius: 0;
 
         .content {
-            height: 57%;
+            height: 52%;
+            
+            .footer {
+                left: -5%;
+            }
         }
     }
 `
