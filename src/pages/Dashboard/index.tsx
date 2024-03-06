@@ -49,7 +49,8 @@ function Dashboard() {
                 <h1>Visão geral</h1>
 
                 <div className='right-content'>
-                  <SelectMultiple names={students} />
+                  <SelectMultiple values={students} text='Ano' />
+                  <SelectMultiple values={students} text='Nome' />
                   <SliderOptions setOnSlide={setOnSlide} />
                 </div>
               </TopBar>

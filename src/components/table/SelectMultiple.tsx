@@ -1,44 +1,22 @@
 import * as React from 'react';
-import { Theme, useTheme } from '@mui/material/styles';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 type Props = {
-    names: string[]
+  text: string;
+  values: string[]
 }
 
-function getStyles(name: string, personName: readonly string[], theme: Theme) {
-  return {
-    fontWeight:
-      personName.indexOf(name) === -1
-        ? theme.typography.fontWeightRegular
-        : theme.typography.fontWeightMedium,
-  };
-}
+function SelectMultiple({ values, text }: Props) {
+  const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
 
-function SelectMultiple({ names }: Props) {
-  const theme = useTheme();
-  const [personName, setPersonName] = React.useState<string[]>([]);
-
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
-    const {
-      target: { value },
-    } = event;
-    setPersonName(
+  const handleChange = (event: SelectChangeEvent<typeof selectedValues>) => {
+    const { target: { value } } = event;
+    
+    setSelectedValues(
       typeof value === 'string' ? value.split(',') : value,
     );
   };
@@ -48,6 +26,7 @@ function SelectMultiple({ names }: Props) {
       <FormControl 
         sx={{ 
           width: 150,
+          maxHeight: 50,
           "& label.Mui-focused": {
             color: '#0B7077'
           },
@@ -59,21 +38,24 @@ function SelectMultiple({ names }: Props) {
             color: '#0B7077',
           }}
         >
-          Nome
+          {text}
         </InputLabel>
         <Select
           multiple
           displayEmpty
-          value={personName}
+          value={selectedValues}
           onChange={handleChange}
           input={<OutlinedInput />}
           renderValue={(selected) => {
             return selected.join(', ');
           }}
-          MenuProps={MenuProps}
           inputProps={{ 'aria-label': 'Without label' }}
           sx={{
             borderRadius: 0,
+            width: 120,
+            "& MuiList-root": {
+              color: '#0B7077'
+            },
             '.MuiOutlinedInput-notchedOutline': {
               border: 0,
               borderBottom: 2,
@@ -91,19 +73,21 @@ function SelectMultiple({ names }: Props) {
             },
             '.MuiSvgIcon-root ': {
               fill: "#0B7077",
-            }
+            },
+            ".MuiMenuItem-root .MuiMenuItem-gutters": {
+              backgroundColor: "#e21919",
+            },
           }}
         >
-          {names.map((name) => (
+          {values.map((value) => (
             <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
+              key={value}
+              value={value}
               sx={{
-                maxWidth: 150
+                width: 110
               }}
             >
-              {name}
+              {value}
             </MenuItem>
           ))}
         </Select>
