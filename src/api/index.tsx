@@ -5,6 +5,17 @@ function getSemesterGradesInArray(obj: any) {
     return Object.keys(obj).map(k => obj[k]);
 }
 
+function daysPassed(dt: Date) {
+    const current = new Date(dt.getTime());
+    const previous = new Date(dt.getFullYear(), 0, 1);
+  
+    return Math.ceil((current.getDay() - previous.getDay() + 1));
+}
+
+function getCanSomeoneBeAproved(letiveDays: number) {
+    return (daysPassed(new Date()) - letiveDays);
+}
+
 const routes = function(this: any) {
     this.passthrough("https://identitytoolkit.googleapis.com/**");
 
@@ -50,7 +61,7 @@ const routes = function(this: any) {
             const totalElements = rawData.length;
     
             const elementsSliced: dataType[] =
-                rawData.slice(currentElements - take < 0 ? 0 : currentElements - take, currentElements + totalElements);
+                rawData.slice(currentElements - take, currentElements + totalElements);
 
             const treatedData: fullDataType[] = elementsSliced.map(element => {
                 let count = 0;
@@ -83,7 +94,20 @@ const routes = function(this: any) {
                         ...element.secondSemester,
                         average: secondSemesterAverage
                     },
-                    presencePercentage: (element.presence / 200) * 100
+                    presencePercentage: (element.presence / 200) * 100,
+                    state: new Date().getFullYear() === element.year
+                        ? getCanSomeoneBeAproved(1) < 200
+                            ? 'open'
+                            : ((element.presence / 200) * 100) < 90
+                                ? 'disapproved'
+                                : ((firstSemesterAverage + secondSemesterAverage) / 2) >= 7
+                                    ? 'approved'
+                                    : 'disapproved'
+                        : ((element.presence / 200) * 100) < 90
+                            ? 'disapproved'
+                            : ((firstSemesterAverage + secondSemesterAverage) / 2) >= 7
+                                ? 'approved'
+                                : 'disapproved'
                 }
             })
     
@@ -100,24 +124,30 @@ const routes = function(this: any) {
     this.get(
         'api/students',
         (_schema: fullDataType, request: Request) => {
-            const { years, classNames } = request.queryParams;
+            const { years, classes } = request.queryParams;
             const yearFilter: number[] = years 
                 ? (years as string[]).map((year: string) => Number(year)) 
                 : [];
-            const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
+            const classFilter: string[] = classes ? classes as unknown as string[] : [];
 
             const rawData: string[] = [];
 
             data.forEach((dataInfo) => {
                 if (!rawData.includes(dataInfo.name)) {
-                    if (yearFilter.length !== 0 && yearFilter.includes(dataInfo.year)) {
-                        if (classFilter && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
-                            rawData.push(dataInfo.name);
-                        } else {
+                    if (yearFilter.length !== 0) {
+                        if (yearFilter.includes(dataInfo.year)) {
+                            if (classFilter.length !== 0) {
+                                if (classFilter.includes(dataInfo.class)) {
+                                    rawData.push(dataInfo.name);
+                                }
+                            } else {
+                                rawData.push(dataInfo.name);
+                            }
+                        }
+                    } else if (classFilter.length !== 0) {
+                        if (classFilter.includes(dataInfo.class)) {
                             rawData.push(dataInfo.name);
                         }
-                    } else if (classFilter.length !== 0 && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
-                        rawData.push(dataInfo.name);
                     } else {
                         rawData.push(dataInfo.name);
                     }
@@ -132,21 +162,29 @@ const routes = function(this: any) {
         'api/classes',
         (_schema: fullDataType, request: Request) => {
             const { years, names } = request.queryParams;
-            const yearFilter: number | undefined = years ? years as unknown as number : undefined;
+            const yearFilter: number[] = years 
+                ? (years as string[]).map((year: string) => Number(year)) 
+                : [];
             const namesFilter: string[] = names ? names as unknown as string[] : [];
 
             const rawData: string[] = [];
 
             data.forEach((dataInfo) => {
                 if (!rawData.includes(dataInfo.class)) {
-                    if (yearFilter && dataInfo.year === yearFilter) {
-                        if (yearFilter && yearFilter === dataInfo.year) {
-                            rawData.push(dataInfo.class);
-                        } else {
+                    if (yearFilter.length !== 0) {
+                        if (yearFilter.includes(dataInfo.year)) {
+                            if (namesFilter.length !== 0) {
+                                if (namesFilter.includes(dataInfo.name)) {
+                                    rawData.push(dataInfo.class);
+                                }
+                            } else {
+                                rawData.push(dataInfo.class);
+                            }
+                        }
+                    } else if (namesFilter.length !== 0) {
+                        if (namesFilter.includes(dataInfo.name)) {
                             rawData.push(dataInfo.class);
                         }
-                    } else if (namesFilter.length !== 0 && namesFilter.includes(dataInfo.name)) {
-                        rawData.push(dataInfo.class);
                     } else {
                         rawData.push(dataInfo.class);
                     }
@@ -166,35 +204,6 @@ const routes = function(this: any) {
             data.forEach((dataInfo) => {
                 if (!rawData.includes(dataInfo.year)) {
                     rawData.push(dataInfo.year);
-                }
-            })
-
-            return rawData;
-        }
-    );
-
-    this.get(
-        'api/phones',
-        (_schema: fullDataType, request: Request) => {
-            const { year, classNames } = request.queryParams;
-            const yearFilter: number | undefined = year ? year as unknown as number : undefined;
-            const classFilter: string[] = classNames ? classNames as unknown as string[] : [];
-
-            const rawData: string[] = [];
-
-            data.forEach((dataInfo) => {
-                if (!rawData.includes(dataInfo.name)) {
-                    if (yearFilter && dataInfo.year === yearFilter) {
-                        if (classFilter && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
-                            rawData.push(dataInfo.name);
-                        } else {
-                            rawData.push(dataInfo.name);
-                        }
-                    } else if (classFilter && classFilter.includes(dataInfo.class) && !rawData.includes(dataInfo.name)) {
-                        rawData.push(dataInfo.name);
-                    } else {
-                        rawData.push(dataInfo.name);
-                    }
                 }
             })
 

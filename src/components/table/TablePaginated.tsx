@@ -1,6 +1,7 @@
 import { Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, createTheme } from '@mui/material';
 import TablePagination from '@mui/material/TablePagination';
 import React, { Dispatch, SetStateAction } from 'react';
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from "react-icons/md";
 
 export interface Column {
     id: string;
@@ -61,34 +62,40 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
                     disabled={page === 0}
                     aria-label="first page"
                 >
-                    {theme.direction === 'rtl' ? 'L' : 'F'}
+                    {theme.direction === 'rtl' ? <MdKeyboardDoubleArrowRight /> : <MdKeyboardDoubleArrowLeft />}
                 </IconButton>
                 <IconButton
                     onClick={handleBackButtonClick}
                     disabled={page === 0}
                     aria-label="previous page"
                 >
-                    {theme.direction === 'rtl' ? '>' : '<'}
+                    {theme.direction === 'rtl' ? <MdKeyboardArrowRight /> : <MdKeyboardArrowLeft />}
                 </IconButton>
                 <IconButton
                     onClick={handleNextButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="next page"
                 >
-                    {theme.direction === 'rtl' ? '<' : '>'}
+                    {theme.direction === 'rtl' ? <MdKeyboardArrowLeft /> : <MdKeyboardArrowRight />}
                 </IconButton>
                 <IconButton
                     onClick={handleLastPageButtonClick}
                     disabled={page >= Math.ceil(count / rowsPerPage) - 1}
                     aria-label="last page"
                 >
-                    {theme.direction === 'rtl' ? 'F' : 'L'}
+                    {theme.direction === 'rtl' ? <MdKeyboardDoubleArrowLeft /> : <MdKeyboardDoubleArrowRight />}
                 </IconButton>
             </Box>
     );
 }
 
-function TableFooter({ length, page, rowsPerPage, setPage, setRowsPerPage }: Props) {
+function TableFooter({ 
+        length, 
+        page, 
+        rowsPerPage, 
+        setPage, 
+        setRowsPerPage,
+    }: Props) {
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number,
@@ -140,43 +147,29 @@ function TableFooter({ length, page, rowsPerPage, setPage, setRowsPerPage }: Pro
     );
 };
 
-function TablePaginated({ columns, children, length, page, setPage, rowsPerPage, setRowsPerPage }: TableProps) {
-    const theme = createTheme({
-        breakpoints: {
-          values: {
-            xs: 600,
-            sm: 710,
-            md: 860,
-            lg: 920,
-            xl: 1100,
-          },
-        },
-    });
-
-      
+function TablePaginated({ 
+        columns, 
+        children, 
+        length, 
+        page, 
+        setPage, 
+        rowsPerPage, 
+        setRowsPerPage, 
+    }: TableProps) {      
     return(
         <TableContainer 
             sx={{ 
                 marginBottom: 60,
-                [theme.breakpoints.down('xl')]: {
-                    marginBottom: 55,
-                },
-                [theme.breakpoints.down('lg')]: {
-                    marginBottom: 48,
-                },
-                [theme.breakpoints.down('md')]: {
-                    marginBottom: 40,
-                },
-                [theme.breakpoints.down('sm')]: {
-                    marginBottom: 36,
-                },
-                [theme.breakpoints.down('xs')]: {
-                    marginBottom: 24,
-                },
+                
             }}
         >
             <Table>
-                <TableHead>
+                <TableHead
+                sx={{ 
+                    '*': {
+                        color: '#05434b',
+                    }
+                }}>
                     <TableRow>
                         {columns.map((column) => (
                         <TableCell
@@ -189,10 +182,15 @@ function TablePaginated({ columns, children, length, page, setPage, rowsPerPage,
                         ))}
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody
+                sx={{ 
+                    '*': {
+                        color: '#05434b',
+                    }
+                }}>
                     { children }
                 </TableBody>
-                <TableFooter 
+                <TableFooter
                     length={length}
                     page={page}
                     setPage={setPage}

@@ -53,6 +53,16 @@ const TopBarStyle = styled.div`
         button:hover {
             font-size: 24px;
         }
+
+        .show-filters {
+            background: #fff;
+            color: #0B7077;
+            font-size: 36px;
+        }
+
+        .show-filters:hover {
+            font-size: 48px;
+        }
     }
 
     @media only screen and (max-width: 1100px) {

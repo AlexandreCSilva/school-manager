@@ -9,9 +9,12 @@ import SelectMultiple from '../../components/table/SelectMultiple';
 import { Grid, TableCell, TableRow, } from '@mui/material';
 import { PaginatedFullDataType, fullDataType } from '../../api/rawData';
 import TablePaginated, { Column } from '../../components/table/TablePaginated';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { addPercentage, greenToRedColor, translateState } from '../../utils';
 
 function Overview() {
     const [onPress, setOnPress] = useState(true);
+    const [onIsFiltering, setOnIsFiltering] = useState(false);
     const [data, setData] = useState({})
     const [students, setStudents] = useState<string[]>([])
     const [years, setYears] = useState<number[]>([])
@@ -99,13 +102,18 @@ function Overview() {
       }
 
       getFilters(strFilter)
+      setOnIsFiltering(false)
     }
 
     
     const columns: Column[] = [
       { id: 'name', label: 'Nome', minWidth: 170, align: 'left' },
       { id: 'class', label: 'Classe', minWidth: 80, align: 'center' },
+      { id: 'year', label: 'Ano', minWidth: 80, align: 'center' },
       { id: 'phoneNumber', label: 'Celular', minWidth: 100, align: 'center'  },
+      { id: 'state', label: 'Estado', minWidth: 100, align: 'center'  },
+      { id: 'presencePercentage', label: 'Presença', minWidth: 100, align: 'center'  },
+      { id: 'average', label: 'Média', minWidth: 100, align: 'center'  },
     ];
     
     return (
@@ -118,42 +126,47 @@ function Overview() {
                 <h1>Visão geral</h1>
 
                 <div className='right-content'>
-                  <Grid container justifyContent="flex-end" spacing={2}>
-                    <Grid item>
-                      <SelectMultiple
-                        values={years} 
-                        text='Ano' 
-                        size={90}
-                        selectedValues={selectedyears}
-                        setSelectedValues={setSelectedYears} 
-                      />
-                    </Grid>
-                    <Grid item>
-                      <SelectMultiple 
-                        values={students} 
-                        text='Nome' 
-                        size={150}
-                        selectedValues={selectedstudents}
-                        setSelectedValues={setSelectedStudents}  
-                      />
-                    </Grid>
-                    <Grid item>
-                      <SelectMultiple 
-                        values={classes} 
-                        text='Classe' 
-                        size={110}
-                        selectedValues={selectedclasses}
-                        setSelectedValues={setSelectedClasses} 
-                      />
-                    </Grid>
-                    <Grid item>
-                      <SliderOptions setOnSlide={setOnSlide} />
-                    </Grid>
+                  {onIsFiltering 
+                    ? <Grid container justifyContent="flex-end" spacing={2}>
+                      <Grid item>
+                        <SelectMultiple
+                          values={years} 
+                          text='Ano' 
+                          size={110}
+                          selectedValues={selectedyears}
+                          setSelectedValues={setSelectedYears} 
+                        />
+                      </Grid>
+                      <Grid item>
+                        <SelectMultiple 
+                          values={students} 
+                          text='Nome' 
+                          size={180}
+                          selectedValues={selectedstudents}
+                          setSelectedValues={setSelectedStudents}  
+                        />
+                      </Grid>
+                      <Grid item>
+                        <SelectMultiple 
+                          values={classes} 
+                          text='Classe' 
+                          size={110}
+                          selectedValues={selectedclasses}
+                          setSelectedValues={setSelectedClasses} 
+                        />
+                      </Grid>
+                      <Grid item>
+                        <SliderOptions setOnSlide={setOnSlide} />
+                      </Grid>
 
-                    <Grid item>
-                      <button onClick={handleFilter}>filtrar</button>
+                      <Grid item>
+                        <button onClick={handleFilter}>filtrar</button>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                    : <button className='show-filters' onClick={() => setOnIsFiltering(true)}>
+                        <MdKeyboardArrowLeft />
+                    </button>
+                  }
                 </div>
               </TopBar>
               
@@ -168,17 +181,72 @@ function Overview() {
                 >
                   {(data as PaginatedFullDataType).elements
                     ? (data as PaginatedFullDataType).elements.map((row: fullDataType) => {return (
-                        <TableRow key={row.name}>
-                            <TableCell component="th" scope="row" align={columns[0].align}>
-                                {row.name}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align={columns[1].align}>
-                                {row.class}
-                            </TableCell>
-                            <TableCell style={{ width: 160 }} align={columns[2].align} >
-                                {row.phoneNumber}
-                            </TableCell>
-                        </TableRow>
+                      <TableRow key={row.name}>
+                        <TableCell align={columns[0].align}>
+                          {row.name}
+                        </TableCell>
+                        <TableCell style={{ width: 80 }} align={columns[1].align}>
+                          {row.class}
+                        </TableCell>
+                        <TableCell style={{ width: 80 }} align={columns[1].align}>
+                          {row.year}
+                        </TableCell>
+                        <TableCell style={{ width: 120 }} align={columns[2].align} >
+                          {row.phoneNumber}
+                        </TableCell>
+                        <TableCell 
+                          style={{ 
+                            width: 80,
+                            height: '40px',
+                            color: row.state === 'approved' || row.state === 'disapproved' 
+                              ? 'white' 
+                              : '#05434b', 
+                            backgroundColor: row.state === 'approved' 
+                              ? 'green' 
+                              : row.state === 'disapproved' 
+                                ? 'red' 
+                                : 'lightgray', 
+                            borderRadius: '50px',
+                            backgroundClip: 'content-box, padding-box',
+                          }} 
+                            align={columns[2].align
+                          }
+                        >
+                          {translateState(row.state)}
+                        </TableCell>
+                        <TableCell 
+                          style={{ 
+                            width: 30,
+                            color: row.presencePercentage <= 90
+                              ? row.presencePercentage >= 20
+                                ? '#a51515' 
+                                : '#fff'
+                              : '#05434b',
+                            backgroundColor: greenToRedColor(row.presencePercentage / 100),
+                            borderRadius: '50px',
+                            backgroundClip: 'content-box, padding-box',
+                          }} 
+                          align={columns[2].align} 
+                        >
+                          {addPercentage(row.presencePercentage)}
+                        </TableCell>
+                        <TableCell 
+                          style={{ 
+                            width: 30,
+                            color: Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) <= 7
+                              ? Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) >= 2
+                                ? '#a51515' 
+                                : '#fff'
+                              : '#05434b',
+                            backgroundColor: greenToRedColor(Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) / 10),
+                            borderRadius: '50px',
+                            backgroundClip: 'content-box, padding-box',
+                          }} 
+                          align={columns[2].align} 
+                        >
+                          {((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)}
+                        </TableCell>
+                      </TableRow>
                     )})
                     : ''}
                 </TablePaginated>

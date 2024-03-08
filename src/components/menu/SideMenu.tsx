@@ -41,10 +41,10 @@ function SideMenu({ onPress, setOnPress }: Props) {
             <div className='division' />
 
             <OptionsStyle onPress={onPress} setOnPress={setOnPress}>
-                <button onClick={() => navigate('/dashboard')}>
+                <button onClick={() => navigate('/overview')}>
                     <MdSpaceDashboard />
                 </button>
-                <a onClick={() => navigate('/dashboard')}>Dashboard</a>
+                <a onClick={() => navigate('/overview')}>Visão geral</a>
             </OptionsStyle>
 
             <FooterStyle onPress={onPress} setOnPress={setOnPress}>
