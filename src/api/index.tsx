@@ -133,7 +133,7 @@ const routes = function(this: any) {
             const filteredData = state ? orderedData.filter(data => data.state === state) : orderedData;
             
             const elementsSliced: dataType[] =
-                filteredData.slice(currentElements - take, currentElements + totalElements);
+                filteredData.slice(currentElements, currentElements + take);
     
             return JSON.stringify({
                 currentPage,

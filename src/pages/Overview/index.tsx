@@ -24,7 +24,7 @@ function Overview() {
     const [selectedclasses, setSelectedClasses] = useState<string[]>([])
     const [onSlide, setOnSlide] = useState('nada');
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [rowsPerPage, setRowsPerPage] = React.useState(8);
 
     const getFilters = (str: string) => {
       fetch("/api/students" + str)
@@ -108,9 +108,10 @@ function Overview() {
     }
 
     useEffect(() => {
-      console.log(onSlide)
-    }, [data, onSlide])
-    
+      setData({})
+      handleFilter()
+    }, [page, rowsPerPage])
+
     const columns: Column[] = [
       { id: 'name', label: 'Nome', minWidth: 170, align: 'left' },
       { id: 'class', label: 'Classe', minWidth: 80, align: 'center' },
@@ -183,7 +184,6 @@ function Overview() {
                   setPage={setPage}
                   rowsPerPage={rowsPerPage}
                   setRowsPerPage={setRowsPerPage}
-                  handleFilter={handleFilter}
                 >
                   {(data as PaginatedFullDataType).elements
                     ? (data as PaginatedFullDataType).elements.map((row: fullDataType) => {return (

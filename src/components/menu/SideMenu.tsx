@@ -5,6 +5,7 @@ import UserContext, { UserContextType } from '../../contexts/UserContext';
 import { PiSignOutBold } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import { MdSpaceDashboard } from "react-icons/md";
+import { RiGraduationCapFill } from "react-icons/ri";
 
 interface Props {
     onPress: boolean;
@@ -45,6 +46,13 @@ function SideMenu({ onPress, setOnPress }: Props) {
                     <MdSpaceDashboard />
                 </button>
                 <a onClick={() => navigate('/overview')}>Visão geral</a>
+            </OptionsStyle>
+
+            <OptionsStyle onPress={onPress} setOnPress={setOnPress}>
+                <button onClick={() => navigate('/grades')}>
+                    <RiGraduationCapFill />
+                </button>
+                <a onClick={() => navigate('/grades')}>Notas</a>
             </OptionsStyle>
 
             <FooterStyle onPress={onPress} setOnPress={setOnPress}>
