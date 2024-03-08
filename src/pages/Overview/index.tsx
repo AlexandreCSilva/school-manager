@@ -147,7 +147,7 @@ function Overview() {
                         <SelectMultiple 
                           values={students} 
                           text='Nome' 
-                          size={180}
+                          size={160}
                           selectedValues={selectedstudents}
                           setSelectedValues={setSelectedStudents}  
                         />
@@ -191,24 +191,24 @@ function Overview() {
                         <TableCell align={columns[0].align}>
                           {row.name}
                         </TableCell>
-                        <TableCell style={{ width: 80 }} align={columns[1].align}>
+                        <TableCell style={{ width: 30 }} align={columns[1].align}>
                           {row.class}
                         </TableCell>
-                        <TableCell style={{ width: 80 }} align={columns[1].align}>
+                        <TableCell style={{ width: 30 }} align={columns[1].align}>
                           {row.year}
                         </TableCell>
-                        <TableCell style={{ width: 120 }} align={columns[2].align} >
+                        <TableCell style={{ width: 110 }} align={columns[2].align} >
                           {row.phoneNumber}
                         </TableCell>
                         <TableCell 
                           style={{ 
                             width: 80,
                             height: '40px',
-                            color: row.state === 'approved' || row.state === 'disapproved' 
+                            color: row.state === 'disapproved' 
                               ? 'white' 
                               : '#05434b', 
                             backgroundColor: row.state === 'approved' 
-                              ? 'green' 
+                              ? 'rgb(0, 255, 0)' 
                               : row.state === 'disapproved' 
                                 ? 'red' 
                                 : 'lightgray', 

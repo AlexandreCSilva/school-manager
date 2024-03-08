@@ -113,7 +113,7 @@ function TableFooter({
     return (
         <div className='footer'>
             <TablePagination
-                rowsPerPageOptions={[5, 8]}
+                rowsPerPageOptions={[5, 6, 7, 8]}
                 colSpan={3}
                 count={length}
                 rowsPerPage={rowsPerPage}
@@ -137,6 +137,7 @@ function TableFooter({
                     position: 'absolute',
                     bottom: 0,
                     left: -0,
+                    backgroundColor: 'white',
 
                     '& .MuiToolbar-root': {
                         paddingRight: '50px',
@@ -160,7 +161,6 @@ function TablePaginated({
         <TableContainer 
             sx={{ 
                 marginBottom: 60,
-                
             }}
         >
             <Table>

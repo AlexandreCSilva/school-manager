@@ -52,11 +52,9 @@ const BaseBoxStyle = styled.div<ClickProps>`
     position: relative;
 
     .content {
-        padding: 30px;
+        padding: 20px 30px;
         width: auto;
         height: auto;
-
-       
     }
     
     .footer {
