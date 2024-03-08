@@ -22,7 +22,7 @@ const routes = function(this: any) {
     this.get(
         'api/students/paginated', 
         (_schema: fullDataType, request: Request) => {
-            const { years, size, start, names, classes } = request.queryParams;
+            const { years, size, start, names, classes, state } = request.queryParams;
             const yearFilter: number[] = years 
                 ? (years as string[]).map((year: string) => Number(year)) 
                 : [new Date().getFullYear()];
@@ -60,10 +60,7 @@ const routes = function(this: any) {
 
             const totalElements = rawData.length;
     
-            const elementsSliced: dataType[] =
-                rawData.slice(currentElements - take, currentElements + totalElements);
-
-            const treatedData: fullDataType[] = elementsSliced.map(element => {
+            const treatedData: fullDataType[] = rawData.map(element => {
                 let count = 0;
                 let sum = 0;
                 let aux = [];
@@ -110,10 +107,37 @@ const routes = function(this: any) {
                                 : 'disapproved'
                 }
             })
+
+            const orderedData = treatedData.sort((Adata, Bdata) => {
+                if (Adata.class < Bdata.class){
+                    return -1;
+                } else if ( Adata.class > Bdata.class){
+                    return 1;
+                } else {
+                    if (Adata.year < Bdata.year){
+                        return -1;
+                    } else if ( Adata.year > Bdata.year){
+                        return 1;
+                    } else {
+                        if (Adata.name < Bdata.name){
+                            return -1;
+                        } else if ( Adata.name > Bdata.name){
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                }
+            });
+
+            const filteredData = state ? orderedData.filter(data => data.state === state) : orderedData;
+            
+            const elementsSliced: dataType[] =
+                filteredData.slice(currentElements - take, currentElements + totalElements);
     
             return JSON.stringify({
                 currentPage,
-                elements: treatedData,
+                elements: elementsSliced,
                 pageSize: take,
                 totalElements,
                 totalPages: Math.ceil(Number(totalElements) / take),

@@ -6,6 +6,14 @@ export function translateState(state: string) {
             return 'reprovado';
         case 'open':
             return 'em aberto';
+        case 'Aprovado':
+            return 'approved';
+        case 'Reprovado':
+            return 'disapproved';
+        case 'Em aberto':
+            return 'open';
+        default:
+            return state;
     }
 }
 

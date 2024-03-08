@@ -22,7 +22,7 @@ function Overview() {
     const [selectedstudents, setSelectedStudents] = useState<string[]>([])
     const [selectedyears, setSelectedYears] = useState<number[]>([])
     const [selectedclasses, setSelectedClasses] = useState<string[]>([])
-    const [onSlide, setOnSlide] = useState('Aprovado');
+    const [onSlide, setOnSlide] = useState('nada');
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
@@ -87,6 +87,8 @@ function Overview() {
         strFilter = strFilter + '&classes[]=' + className
       })
 
+      strFilter = onSlide !== 'nada' ? '&state=' + onSlide + strFilter : '' + strFilter
+
       fetch("/api/students/paginated?size=" + rowsPerPage + '&start=' + page + strFilter)
         .then((res) => res.json())
         .then((json) => {
@@ -105,6 +107,9 @@ function Overview() {
       setOnIsFiltering(false)
     }
 
+    useEffect(() => {
+      console.log(onSlide)
+    }, [data, onSlide])
     
     const columns: Column[] = [
       { id: 'name', label: 'Nome', minWidth: 170, align: 'left' },
@@ -156,7 +161,7 @@ function Overview() {
                         />
                       </Grid>
                       <Grid item>
-                        <SliderOptions setOnSlide={setOnSlide} />
+                        <SliderOptions setOnSlide={setOnSlide} onSlide={onSlide} />
                       </Grid>
 
                       <Grid item>
@@ -178,6 +183,7 @@ function Overview() {
                   setPage={setPage}
                   rowsPerPage={rowsPerPage}
                   setRowsPerPage={setRowsPerPage}
+                  handleFilter={handleFilter}
                 >
                   {(data as PaginatedFullDataType).elements
                     ? (data as PaginatedFullDataType).elements.map((row: fullDataType) => {return (

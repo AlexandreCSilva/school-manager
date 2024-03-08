@@ -159,7 +159,7 @@ const data = [
         studentId: 1,
         name: 'Marcos Neto',
         phoneNumber: '(14) 92345-6789',
-        year: 2023,
+        year: 2022,
         class: '3-B',
         firstSemester: {
             mathGrade: 8,
@@ -197,8 +197,8 @@ const data = [
         studentId: 1,
         name: 'Luana Segunda',
         phoneNumber: '(12) 91234-5678',
-        year: 2023,
-        class: '3-A',
+        year: 2022,
+        class: '3-B',
         firstSemester: {
             mathGrade: 6,
             portugueseGrade: 8,

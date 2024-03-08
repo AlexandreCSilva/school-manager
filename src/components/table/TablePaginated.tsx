@@ -16,6 +16,7 @@ interface Props {
     rowsPerPage: number;
     setPage: Dispatch<SetStateAction<number>>;
     setRowsPerPage: Dispatch<SetStateAction<number>>;
+    handleFilter: () => void;
 }
 
 interface TableProps extends Props{
@@ -95,12 +96,14 @@ function TableFooter({
         rowsPerPage, 
         setPage, 
         setRowsPerPage,
+        handleFilter,
     }: Props) {
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number,
     ) => {
         setPage(newPage);
+        handleFilter();
     };
     
     const handleChangeRowsPerPage = (
@@ -155,6 +158,7 @@ function TablePaginated({
         setPage, 
         rowsPerPage, 
         setRowsPerPage, 
+        handleFilter,
     }: TableProps) {      
     return(
         <TableContainer 
@@ -196,6 +200,7 @@ function TablePaginated({
                     setPage={setPage}
                     rowsPerPage={rowsPerPage}
                     setRowsPerPage={setRowsPerPage}
+                    handleFilter={handleFilter}
                 />
             </Table>
         </TableContainer>

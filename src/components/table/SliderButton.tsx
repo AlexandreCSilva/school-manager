@@ -1,45 +1,66 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Slider, styled } from "@mui/material";
+import { translateState } from '../../utils';
 
 interface Props {
+    onSlide: string;
     setOnSlide: Dispatch<SetStateAction<string>>;
 }
 
-function SliderOptions({ setOnSlide }: Props) {
+function SliderOptions({ setOnSlide, onSlide }: Props) {
     const marks = [
         {
-          value: 50,
+            value: 100,
+            label: 'Reprovado',
+          },
+        {
+          value: 60,
           label: 'Aprovado',
         },
         {
-          value: 100,
-          label: 'Reprovado',
+          value: 30,
+          label: 'Em aberto',
         },
         {
-          value: 0,
-          label: 'Em aberto',
+            value: 0,
+            label: 'nada',
         },
     ];
 
-    function valuetext(value: number | number[]) {
+    function valueText(value: number | number[]) {
         switch (value) {
-            case 50:
+            case 30:
+                return 'Em aberto';
+            case 60:
                 return 'Aprovado';
             case 100:
                 return 'Reprovado';
             default: 
-                return 'Em aberto'
+                return 'nada'
+        }
+    }
+
+    function textToValue(value: string) {
+        switch (value) {
+            case 'open':
+                return 30;
+            case 'approved':
+                return 60;
+            case 'disapproved':
+                return 100;
+            default: 
+                return 0
         }
     }
 
     const handleChange = (event: Event, newValue: number | number[]) => {
-        setOnSlide(valuetext(newValue));
+        setOnSlide(translateState(valueText(newValue)));
     };
 
     return (
         <SliderButton
-            defaultValue={0}
-            getAriaValueText={valuetext}
+            defaultValue={textToValue(onSlide)}
+            getAriaValueText={valueText}
             aria-labelledby="discrete-slider-restrict"
             onChange={handleChange}
             step={null}
@@ -49,7 +70,7 @@ function SliderOptions({ setOnSlide }: Props) {
 };
 
 const SliderButton = styled(Slider)(() => ({
-    width: '250px',
+    width: '340px',
     color: '#b8d9dd',
     height: '8px',
     "& .MuiSlider-thumb": {
@@ -63,10 +84,10 @@ const SliderButton = styled(Slider)(() => ({
         fontSize: "16px",
         color: "#0B7077",
     },
-    '& .MuiSlider-markLabel[data-index="2"]': {
-        transform: "translateX(0%)"
+    '& .MuiSlider-markLabel[data-index="3"]': {
+        transform: "translateX(-0%)"
     },
-    '& .MuiSlider-markLabel[data-index="1"]': {
+    '& .MuiSlider-markLabel[data-index="0"]': {
         transform: "translateX(-100%)"
     },
 }));
