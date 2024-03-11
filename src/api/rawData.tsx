@@ -24,7 +24,7 @@ export type PaginatedFullDataType = {
     totalPages: number;
 }
 
-type semester = {
+export type semester = {
     mathGrade: number | null;
     portugueseGrade: number | null;
     historyGrade: number | null;

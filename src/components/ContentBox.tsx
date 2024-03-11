@@ -53,8 +53,11 @@ const BaseBoxStyle = styled.div<ClickProps>`
 
     .content {
         padding: 20px 30px;
-        width: auto;
-        height: auto;
+        width: 95%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        overflow: scroll;
     }
     
     .footer {
@@ -76,7 +79,7 @@ const BaseBoxStyle = styled.div<ClickProps>`
         border-radius: 0;
 
         .content {
-            height: 52%;
+            height: 60%;
             
             .footer {
                 left: -5%;
