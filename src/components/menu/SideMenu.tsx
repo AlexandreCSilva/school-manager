@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useContext } from 'react';
 import styled from "styled-components";
 import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import UserContext, { UserContextType } from '../../contexts/UserContext';
-import { PiSignOutBold } from "react-icons/pi";
+import { PiSignOutBold, PiStudentFill } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import { MdSpaceDashboard } from "react-icons/md";
 import { RiGraduationCapFill } from "react-icons/ri";
@@ -53,6 +53,14 @@ function SideMenu({ onPress, setOnPress }: Props) {
                     <RiGraduationCapFill />
                 </button>
                 <a onClick={() => navigate('/grades')}>Notas</a>
+            </OptionsStyle>
+
+
+            <OptionsStyle onPress={onPress} setOnPress={setOnPress}>
+                <button onClick={() => navigate('/student/none')}>
+                    <PiStudentFill />
+                </button>
+                <a onClick={() => navigate('/student/none')}>Estudante</a>
             </OptionsStyle>
 
             <FooterStyle onPress={onPress} setOnPress={setOnPress}>

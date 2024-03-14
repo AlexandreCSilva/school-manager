@@ -7,6 +7,7 @@ import SignIn from '../pages/SignIn';
 import Overview from '../pages/Overview';
 import PrivateRoute from '../components/PrivateRoute';
 import Grades from '../pages/Grades.tsx';
+import Students from '../pages/Student';
 
 function PageRouter() {
     return (
@@ -24,6 +25,11 @@ function PageRouter() {
                 <Route  path="/grades" element={
                     <PrivateRoute>
                         <Grades />
+                    </PrivateRoute>
+                }/>
+                <Route  path="/student/:name" element={
+                    <PrivateRoute>
+                        <Students />
                     </PrivateRoute>
                 }/>
                 <Route  path="*" element={<HomePage />}/>
