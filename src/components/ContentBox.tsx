@@ -34,7 +34,7 @@ const ContentBoxStyle = styled.div`
     height: 100vh;
     width: 100vw;
     background: rgb(71,168,195);
-    background: linear-gradient(180deg, rgba(71,168,195,1) 9%, rgba(226,246,252,1) 100%);  
+    background: linear-gradient(180deg, rgba(71,168,195,1) 9%, rgba(226,246,252,1) 100%);
 `
 
 const BaseBoxStyle = styled.div<ClickProps>`
@@ -48,9 +48,10 @@ const BaseBoxStyle = styled.div<ClickProps>`
     background: #fff;
     border-radius: 50px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
     position: relative;
-
+   
     .content {
         padding: 20px 30px;
         width: 95%;

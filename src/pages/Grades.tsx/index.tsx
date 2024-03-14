@@ -4,15 +4,66 @@ import { Container } from '../../components/LayoutComponents';
 import { BaseBox, ContentBox } from '../../components/ContentBox';
 import TopBar from '../../components/table/TopBar';
 import { toast } from 'react-toastify';
-import { Box, Grid, Paper } from '@mui/material';
+import { Grid } from '@mui/material';
 import SelectMultiple from '../../components/table/SelectMultiple';
 import SliderOptions from '../../components/table/SliderButton';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
-import { BarChart, PieChart, pieArcLabelClasses } from '@mui/x-charts';
 import SmallBox from '../../components/SmallBox';
-import { ResponsiveChartContainer } from '@mui/x-charts/ResponsiveChartContainer';
-import { fullDataType } from '../../api/rawData';
+import { fullDataType, semester } from '../../api/rawData';
 import { colorPallete, translateGrade } from '../../utils';
+import ReactEcharts from "echarts-for-react";
+import { useNavigate } from 'react-router-dom';
+
+function treatData(data: any, setTreatedData: (response: any[]) => void) {
+  if (data.length !== 0) {
+    const fullData = data as fullDataType[];
+    let aux: any[] = [];
+    const response: any[] = [];
+
+    fullData.forEach((fdata) => {
+      aux = [ 
+        ...aux, 
+        ...Object.entries(fdata.firstSemester), 
+        ...Object.entries(fdata.secondSemester)
+      ];
+    })
+
+    for(let i = 0; i <= 13; i++) {
+      response.push({ 
+        id: i, 
+        label: translateGrade(aux[i][0]), 
+        value:  aux
+          .filter(fdata => fdata[0] === aux[i][0] && aux[i][0] !== null)
+          .reduce((total, current) => {
+            return total + current[1]
+          }, 0)
+      });
+    }
+    setTreatedData(response)
+  }
+}
+
+function calculateAverage(firstSemester: semester & { average: number }, secondSemester: semester & { average: number }): number {
+  return (firstSemester.average + secondSemester.average) / 2;
+}
+
+function treatDataByStudent(data: any, setTreatedDataStudent: (response: any[]) => void) {
+  if (data.length !== 0) {
+    const fullData = data as fullDataType[];
+    const response: any[] = [];
+
+    fullData.forEach((fdata) => {
+      response.push({ 
+        id: fdata.studentId, 
+        name: fdata.name, 
+        average: 
+        calculateAverage(fdata.firstSemester, fdata.secondSemester) 
+      })
+    })
+
+    setTreatedDataStudent(response)
+  }
+}
 
 function Grades() {
     const [onPress, setOnPress] = useState(true);
@@ -25,7 +76,9 @@ function Grades() {
     const [selectedyears, setSelectedYears] = useState<number[]>([])
     const [selectedclasses, setSelectedClasses] = useState<string[]>([])
     const [onSlide, setOnSlide] = useState('nada');
-    const [pieData, setPieData] = useState<any[]>([]);
+    const [treatedData, setTreatedData] = useState<any[]>([]);
+    const [treatedDataStudent, setTreatedDataStudent] = useState<any[]>([]);
+    const navigate = useNavigate();
 
     const getFilters = (str: string) => {
       fetch("/api/students" + str)
@@ -68,63 +121,36 @@ function Grades() {
         .catch((error) => {
           toast('error on get api data')
           console.log(error.message)
-        })
+        });
 
-      getFilters('')
-    }, [])
+      getFilters('');
+    }, []);
 
     useEffect(() => {
-      if (data.length !== 0) {
-        const fullData = data as fullDataType[];
-        let aux: any[] = [];
-        const response: any[] = [];
-
-        fullData.forEach((fdata) => {
-          aux = [ 
-            ...aux, 
-            ...Object.entries(fdata.firstSemester), 
-            ...Object.entries(fdata.secondSemester)
-          ];
-        })
-
-        for(let i = 0; i <= 13; i++) {
-          console.log(aux
-              .filter(fdata => fdata[0] === aux[i][0] && aux[i][0] !== null))
-          response.push({ 
-            id: i, 
-            label: translateGrade(aux[i][0]), 
-            value:  aux
-              .filter(fdata => fdata[0] === aux[i][0] && aux[i][0] !== null)
-              .reduce((total, current) => {
-                return total + current[1]
-              }, 0)
-          });
-        }
-        console.log(response)
-        setPieData(response)
-      }
-    }, [data])
+      treatData(data, setTreatedData);
+      treatDataByStudent(data, setTreatedDataStudent);
+    }, [data]);
 
     const handleFilter = () => {
       let strFilter = '';
 
       selectedyears.forEach((year) => {
         strFilter = strFilter + '&years[]=' + year
-      })
+      });
 
       selectedstudents.forEach((student) => {
         strFilter = strFilter + '&names[]=' + student
-      })
+      });
 
       selectedclasses.forEach((className) => {
         strFilter = strFilter + '&classes[]=' + className
-      })
+      });
 
-      strFilter = onSlide !== 'nada' ? '&state=' + onSlide + strFilter : '' + strFilter
+      strFilter = onSlide !== 'nada' ? '&state=' + onSlide + strFilter : '' + strFilter;
 
       if (strFilter !== '') {
-        strFilter = '?' + strFilter.substring(1)
-      }
+        strFilter = '?' + strFilter.substring(1);
+      };
 
       fetch("/api/students/data" + strFilter)
         .then((res) => res.json())
@@ -134,11 +160,11 @@ function Grades() {
         .catch((error) => {
           toast('error on get api data')
           console.log(error.message)
-        })
+        });
 
-      getFilters(strFilter)
-      setOnIsFiltering(false)
-    }
+      getFilters(strFilter);
+      setOnIsFiltering(false);
+    };
 
     return (
       <Container>
@@ -196,85 +222,249 @@ function Grades() {
               
               <div className='content'>
                 <SmallBox>
-                  <Box sx={{ width: 1 }}>
-                    <BarChart
-                      xAxis={[
+                  <ReactEcharts 
+                    style={{height: '400px', width: '100%'}}
+                    option={{
+                      title: {
+                        text: 'Total por matéria',
+                        top: '15px',
+                        left: '30px',
+                      },
+                      dataZoom: [
                         {
-                          id: 'barCategories',
-                          data: ['bar A', 'bar B', 'bar C'],
-                          scaleType: 'band',
+                          show: true,
+                          realtime: true,
+                          start: 0,
+                          end: 40,
                         },
-                      ]}
-                      series={[
+                      ],
+                      grid: [
                         {
-                          data: [2, 5, 3],
+                          height: '60%'
                         },
-                      ]}
-                    />
-                  </Box>
+                      ],
+                      xAxis: {
+                        type: 'category',
+                        data: treatedData
+                          .filter(tdata => tdata.label !== 'média')
+                          .map(tdata => tdata.label),
+                        axisLabel: { interval: 0, rotate: 45 },
+                      },
+                      yAxis: {
+                        type: 'value'
+                      },
+                      series: [
+                        {
+                          data: treatedData
+                            .filter(tdata => tdata.label !== 'média')
+                            .map((tdata, index) => { 
+                            return { 
+                              value: tdata.value / data.length, 
+                              itemStyle: { 
+                                color: colorPallete[index]
+                              }
+                            }
+                          }),
+                          type: 'bar',
+                          markLine: {
+                            data: [{ type: 'average', name: 'Avg' }],
+                            lineStyle: {
+                              color: 'black'
+                            }
+                          }
+                        }
+                      ]
+                    }}
+                  />
                 </SmallBox>
+                
                 <SmallBox>
-                  <h1>
-                    Total por matéria
-                  </h1>
-                  
-                  <Paper sx={{
-                    paddingTop: '50px',  
-                    width: '100%', 
-                    height: 'calc(100% - 50px)',
-                    borderRadius: 
-                    '50px', 
-                    zIndex: 1,
-                  }}>
-                      <PieChart
-                        series={[
-                          {
-                            data: pieData,
-                            innerRadius: 40,
-                            paddingAngle: 1,
-                            cornerRadius: 5,
-                            startAngle: -90,
-                            endAngle: 270,
-                            highlightScope: { 
-                              faded: 'global', 
-                              highlighted: 'item' 
-                            },
-                            faded: { 
-                              innerRadius: 30, 
-                              additionalRadius: -20, 
-                              color: 'gray',
-                            },
-                            cx: '65%',
-                            cy: '55%',
-                            arcLabel: (item) => `${item.label}`,
-                          }]}
-                        colors={colorPallete}
-                        slotProps={{
-                          legend: {
-                            direction: 'row',
-                            position: { 
-                              vertical: 'top', 
-                              horizontal: 'middle', 
-                            },
-                            itemMarkWidth: 20,
-                            itemMarkHeight: 20,
-                            markGap: 5,
-                            itemGap: 10,
-                            labelStyle: {
-                              fill: '#0B7077',
+                  <ReactEcharts
+                    style={{height: '400px', width: '100%'}}
+                    option={{
+                      title: {
+                        text: 'Matéria quanto a média',
+                        top: '15px',
+                        left: '30px',
+                      },
+                      xAxis: {
+                        type: 'category',
+                        data: treatedData
+                          .filter(tdata => tdata.label !== 'média')
+                          .map(tdata => tdata.label),
+                        axisLabel: { interval: 0, rotate: 45 }
+                      },
+                      yAxis: {
+                        type: 'value',
+                      },
+                      grid: [
+                        {
+                          left: '50px',
+                          top: '25%',
+                          height: '50%',
+                        },
+                      ],
+                      series: [
+                        {
+                          type: 'line',
+                          data: treatedData
+                            .filter(tdata => tdata.label !== 'média')
+                            .map((tdata) => {
+                              return { 
+                                value: 
+                                  ((tdata.value / data.length) - 
+                                  (treatedData.filter(tdata => tdata.label === 'média')[0].value / data.length))
+                                  .toFixed(2),
+                                itemStyle: { 
+                                  color: '#0efd0e'
+                                }
+                              }  
+                            }),
+                          markPoint: {
+                            data: [
+                              { type: 'max', name: 'Max' },
+                              { type: 'min', name: 'Min' }
+                            ]
+                          },
+                          markLine: {
+                            data: [{ type: 'average', name: 'Avg' }],
+                            lineStyle: {
+                              color: 'black'
                             },
                           },
-                        }}
-                        sx={{
-                          '& .MuiPieArcLabel-root': {
-                            fill: 'white',
-                          }
-                        }}
-                      />
-                  </Paper>
+                          lineStyle: {
+                            color: '#0efd0e'
+                          },
+                        },
+                      ]
+                    }}
+                  />
                 </SmallBox>
+                
                 <SmallBox>
-                  b
+                  <ReactEcharts 
+                    style={{height: '400px', width: '100%'}}
+                    option={{
+                      title: {
+                        text: 'Aluno por matéria',
+                        top: '15px',
+                        left: '30px',
+                      },
+                      dataZoom: [
+                        {
+                          show: true,
+                          realtime: true,
+                          start: 0,
+                          end: 100,
+                        },
+                      ],
+                      grid: [
+                        {
+                          height: '60%'
+                        },
+                      ],
+                      xAxis: {
+                        type: 'category',
+                        data: treatedDataStudent
+                          .map(tdata => tdata.name),
+                        axisLabel: { interval: 0, rotate: 45 },
+                      },
+                      yAxis: {
+                        type: 'value'
+                      },
+                      series: [
+                        {
+                          data: treatedDataStudent
+                            .map((tdata, index) => { 
+                            return { 
+                              value: tdata.average, 
+                              itemStyle: { 
+                                color: colorPallete[index]
+                              }
+                            }
+                          }),
+                          type: 'bar',
+                          markLine: {
+                            data: [{ type: 'average', name: 'Avg' }],
+                            lineStyle: {
+                              color: 'black'
+                            }
+                          }
+                        }
+                      ]
+                    }} 
+                    onEvents={{
+                      'click': (event: { name: string }) => {
+                        navigate('/student/' + event.name);
+                      }
+                    }}
+                  />
+                </SmallBox>
+
+                <SmallBox>
+                  <ReactEcharts
+                    style={{height: '400px', width: '100%'}}
+                    option={{
+                      title: {
+                        text: 'Aluno quanto a média',
+                        top: '15px',
+                        left: '30px',
+                      },
+                      xAxis: {
+                        type: 'category',
+                        data: treatedDataStudent
+                          .map(tdata => tdata.name),
+                        axisLabel: { interval: 0, rotate: 45 }
+                      },
+                      yAxis: {
+                        type: 'value',
+                      },
+                      grid: [
+                        {
+                          left: '50px',
+                          top: '25%',
+                          height: '50%',
+                        },
+                      ],
+                      series: [
+                        {
+                          type: 'line',
+                          data: treatedDataStudent
+                            .map((tdata) => {
+                              return { 
+                                value: 
+                                  ((tdata.average / data.length) - 
+                                  (treatedDataStudent[0].average / data.length))
+                                  .toFixed(2),
+                                itemStyle: {
+                                  color: '#0efd0e'
+                                }
+                              }  
+                            }),
+                          markPoint: {
+                            data: [
+                              { type: 'max', name: 'Max' },
+                              { type: 'min', name: 'Min' }
+                            ]
+                          },
+                          markLine: {
+                            data: [{ type: 'average', name: 'Avg' }],
+                            lineStyle: {
+                              color: 'black'
+                            },
+                          },
+                          lineStyle: {
+                            color: '#0efd0e'
+                          },
+                        },
+                      ]
+                    }}
+                    onEvents={{
+                      'click': (event: { name: string }) => {
+                        navigate('/student/' + event.name);
+                      }
+                    }}
+                  />
                 </SmallBox>
               </div>
             </BaseBox>

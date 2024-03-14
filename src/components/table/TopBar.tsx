@@ -10,7 +10,7 @@ function TopBar({ children }: Props) {
     );
 };
 
-const TopBarStyle = styled.div`
+const TopBarStyle = styled.div<{ isFiltering?: boolean }>`
     width: calc(100% - 60px);
     min-height: 90px;
     border-radius: 50px 50px 0 0;
@@ -72,8 +72,10 @@ const TopBarStyle = styled.div`
     }
 
     @media only screen and (max-width: 600px) {
+        height: ${props => props.isFiltering ? "90px" : "auto"};
+
         h1 {
-            margin-bottom: 260px;
+            margin-bottom: 60px;
         }
         
         .right-content {
