@@ -1,3 +1,4 @@
+import { color } from "echarts";
 import { fullDataType } from "../api/rawData";
 
 export function translateState(state: string) {
@@ -61,8 +62,25 @@ export function addPercentage(value: number | string) {
 }
 
 export function greenToRedColor(value: number) {
-    const hue = ((value) * 120).toString(10);
-    return ["hsl(", hue, ",100%,50%)"].join("");
+    const color2: number[] = [ 255, 255, 0 ]
+    const color1: number[] = [ 255, 0, 0 ]
+    const color3: number[] = [ 0, 255, 0 ];
+
+    value = value / 100;
+
+    const value2 = 1 - value;
+    
+    const rgb: number[] = value <= 0.5 
+    ? [
+        Math.round(color2[0] * value + color1[0] * value2),
+        Math.round(color2[1] * value + color1[1] * value2),
+    ]
+    : [
+        Math.round(color3[0] * value + color2[0] * value2),
+        Math.round(color3[1] * value + color2[1] * value2),
+    ];
+    
+    return `rgb(${rgb[0] * 2}, ${rgb[1] * 2}, 0)`;
 }
 
 export const colorPallete = [

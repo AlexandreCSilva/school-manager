@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import TopBar from '../../components/table/TopBar';
 import SliderOptions from '../../components/table/SliderButton';
 import SelectMultiple from '../../components/table/SelectMultiple';
-import { Grid, TableCell, TableRow, } from '@mui/material';
+import { Grid, TableCell, TableRow, LinearProgress, Typography, Box, linearProgressClasses } from '@mui/material';
 import { PaginatedFullDataType, fullDataType } from '../../api/rawData';
 import TablePaginated, { Column } from '../../components/table/TablePaginated';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
@@ -72,6 +72,10 @@ function Overview() {
       getFilters('')
     }, [])
 
+    useEffect(() => {
+      console.log((data as PaginatedFullDataType).totalElements)
+    }, [data])
+
     const handleFilter = () => {
       let strFilter = '';
 
@@ -117,7 +121,7 @@ function Overview() {
       { id: 'class', label: 'Classe', minWidth: 80, align: 'center' },
       { id: 'year', label: 'Ano', minWidth: 80, align: 'center' },
       { id: 'phoneNumber', label: 'Celular', minWidth: 100, align: 'center'  },
-      { id: 'state', label: 'Estado', minWidth: 100, align: 'center'  },
+      { id: 'state', label: 'Status', minWidth: 100, align: 'center'  },
       { id: 'presencePercentage', label: 'Presença', minWidth: 100, align: 'center'  },
       { id: 'average', label: 'Média', minWidth: 100, align: 'center'  },
     ];
@@ -221,30 +225,64 @@ function Overview() {
                           {translateState(row.state)}
                         </TableCell>
                         <TableCell 
-                          style={{ 
-                            width: 30,
-                            color: row.presencePercentage <= 90
-                              ? row.presencePercentage >= 20
-                                ? '#a51515' 
-                                : '#fff'
-                              : '#05434b',
-                            backgroundColor: greenToRedColor(row.presencePercentage / 100),
-                            borderRadius: '50px',
-                            backgroundClip: 'content-box, padding-box',
-                          }} 
-                          align={columns[2].align} 
+                          align={columns[2].align}
+                          sx={{
+                            width: '100px',
+                          }}
                         >
-                          {addPercentage(row.presencePercentage)}
+                          <Box 
+                            sx={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              borderRadius: '50px',
+                              position: 'relative',
+                            }}
+                          >
+                            <Box 
+                              sx={{
+                                width: '100%',
+                                height: '100%',
+                              }}
+                            >
+                              <LinearProgress 
+                                variant="determinate" 
+                                value={row.presencePercentage}
+                                color='inherit'
+                                sx={{
+                                  borderRadius: 50,
+                                  color: 'blue',
+                                  height: '40px',
+                                  "--LinearProgress-thickness": "90px",
+	                                [`&.${linearProgressClasses.determinate} > .${linearProgressClasses.bar1Determinate}`]: { 
+                                    backgroundColor: greenToRedColor(row.presencePercentage) 
+                                  },
+                                }}
+                              />
+                            </Box>
+                            <Typography 
+                              variant="body2" 
+                              sx={{ 
+                                position: 'absolute',
+                                width: '100%',
+                                color: row.presencePercentage <= 50
+                                  ? '#a51515' 
+                                  : '#05434b',
+                              }}
+                            >
+                              {addPercentage(row.presencePercentage)}
+                            </Typography>
+                          </Box>
+                         
                         </TableCell>
                         <TableCell 
                           style={{ 
                             width: 30,
                             color: Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) <= 7
-                              ? Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) >= 2
+                              ? Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) >= 2.5
                                 ? '#a51515' 
                                 : '#fff'
                               : '#05434b',
-                            backgroundColor: greenToRedColor(Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) / 10),
+                            backgroundColor: greenToRedColor(Number(((row.firstSemester.average + row.secondSemester.average) / 2).toFixed(2)) * 10),
                             borderRadius: '50px',
                             backgroundClip: 'content-box, padding-box',
                           }} 
