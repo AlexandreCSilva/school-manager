@@ -3,9 +3,9 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { Props } from "../types";
 import { User } from 'firebase/auth';
 
-export type UserContextType = { userData: User, setUserData: (user: User | null) => void }
+export type UserContextType = { userData: User | null, setUserData: (user: User | null) => void }
 
-const UserContext = createContext<UserContextType | null>(null);
+const UserContext = createContext<UserContextType>({ userData: null, setUserData: (user: User | null) => user});
 
 export default UserContext;
 

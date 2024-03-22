@@ -5,6 +5,7 @@ import UserContext from '../../contexts/UserContext';
 import { PiSignOutBold } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import { MdSpaceDashboard } from "react-icons/md";
+import { User } from '@firebase/auth';
 
 interface Props {
     onPress: boolean;
@@ -20,7 +21,7 @@ function SideMenu({ onPress, setOnPress }: Props) {
     }
 
     const handleSignOut = () => {
-        setUserData({});
+        setUserData(null);
         navigate('/');
     }
     
@@ -48,8 +49,8 @@ function SideMenu({ onPress, setOnPress }: Props) {
             </OptionsStyle>
 
             <FooterStyle onPress={onPress} setOnPress={setOnPress}>
-                <img src={userData.photoURL as string} />
-                <p>{userData.email}</p>
+                <img src={(userData as User).photoURL as string} />
+                <p>{(userData as User).email}</p>
                 <button onClick={handleSignOut}>
                     <PiSignOutBold />
                 </button>
