@@ -4,7 +4,7 @@ import HomePage from '../pages/HomePage';
 import About from '../pages/About';
 import SignUp from '../pages/SignUp';
 import SignIn from '../pages/SignIn';
-import Overview from '../pages/Overview';
+import Overview from '../pages/Overview/index.tsx';
 import PrivateRoute from '../components/PrivateRoute';
 import Grades from '../pages/Grades.tsx';
 import Students from '../pages/Student';

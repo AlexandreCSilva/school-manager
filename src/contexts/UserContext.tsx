@@ -6,6 +6,7 @@ import { User } from 'firebase/auth';
 export type UserContextType = { userData: User, setUserData: (user: User | null) => void }
 
 const UserContext = createContext<UserContextType | null>(null);
+
 export default UserContext;
 
 export function UserProvider({ children }: Props) {
