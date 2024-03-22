@@ -529,11 +529,6 @@ function Students() {
                             : []
                         }
                       ]
-                    }} 
-                    onEvents={{
-                      'click': (event: { name: string }) => {
-                        navigate('/student/' + event.name);
-                      }
                     }}
                   />
                 </SmallBox>

@@ -305,7 +305,7 @@ const data = [
             sociologyGrade: null,
             philosophyGrade: null,
         },
-        presence: 65, 
+        presence: 95, 
     },
     {
         studentId: 3,
@@ -343,7 +343,7 @@ const data = [
             sociologyGrade: 8,
             philosophyGrade: 7,
         },
-        presence: 164, 
+        presence: 104, 
     },
     {
         studentId: 4,

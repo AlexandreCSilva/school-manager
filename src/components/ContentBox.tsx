@@ -71,6 +71,12 @@ const BaseBoxStyle = styled.div<ClickProps>`
 
     @media only screen and (max-width: 1100px) {
         margin-left: calc(5% + 90px);
+
+        .content {
+            width: auto;
+            display: flex;
+            justify-content: center;
+        }
     }
 
     @media only screen and (max-width: 600px) {
@@ -81,15 +87,14 @@ const BaseBoxStyle = styled.div<ClickProps>`
 
         .content {
             width: auto;
+            padding: 20px 0;
             height: 85%;
+            display: flex;
+            justify-content: center;
 
-            * {
+            &:not(.footer) {
                 width: 100%;
                 height: auto;
-            }
-            
-            .footer {
-                left: -5%;
             }
         }
     }

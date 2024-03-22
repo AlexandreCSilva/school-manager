@@ -10,7 +10,7 @@ import SliderOptions from '../../components/table/SliderButton';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import SmallBox from '../../components/SmallBox';
 import { fullDataType, semester } from '../../api/rawData';
-import { colorPallete, translateGrade } from '../../utils';
+import { colorPallete, ifNameAlreadyIn, translateGrade } from '../../utils';
 import ReactEcharts from "echarts-for-react";
 import { useNavigate } from 'react-router-dom';
 
@@ -165,6 +165,10 @@ function Grades() {
       getFilters(strFilter);
       setOnIsFiltering(false);
     };
+
+    useEffect(() => {
+      treatDataByStudent(ifNameAlreadyIn(data), setTreatedDataStudent);
+    }, [data]);
 
     return (
       <Container>
@@ -344,6 +348,11 @@ function Grades() {
                           },
                         },
                       ]
+                    }}
+                    onEvents={{
+                      'click': (event: { name: string }) => {
+                        navigate('/student/' + event.name);
+                      }
                     }}
                   />
                 </SmallBox>

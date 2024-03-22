@@ -108,7 +108,9 @@ const routes = function(this: any) {
                 }
             })
 
-            const orderedData = treatedData.sort((Adata, Bdata) => {
+            const filteredData = state ? treatedData.filter(data => data.state === state) : treatedData;
+
+            const orderedData = filteredData.sort((Adata, Bdata) => {
                 if (Adata.class < Bdata.class){
                     return -1;
                 } else if ( Adata.class > Bdata.class){
@@ -130,10 +132,8 @@ const routes = function(this: any) {
                 }
             });
 
-            const filteredData = state ? orderedData.filter(data => data.state === state) : orderedData;
-            
             const elementsSliced: dataType[] =
-                filteredData.slice(currentElements, currentElements + take);
+                orderedData.slice(currentElements, currentElements + take);
     
             return JSON.stringify({
                 currentPage,

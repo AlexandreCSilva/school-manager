@@ -1,11 +1,12 @@
 import React, { Dispatch, SetStateAction, useContext } from 'react';
 import styled from "styled-components";
 import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import UserContext, { UserContextType } from '../../contexts/UserContext';
+import UserContext from '../../contexts/UserContext';
 import { PiSignOutBold, PiStudentFill } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import { MdSpaceDashboard } from "react-icons/md";
 import { RiGraduationCapFill } from "react-icons/ri";
+import { User } from '@firebase/auth';
 
 interface Props {
     onPress: boolean;
@@ -13,7 +14,7 @@ interface Props {
 }
 
 function SideMenu({ onPress, setOnPress }: Props) {
-    const { userData, setUserData } = useContext(UserContext) as unknown as UserContextType;
+    const { userData, setUserData } = useContext(UserContext);
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -60,12 +61,12 @@ function SideMenu({ onPress, setOnPress }: Props) {
                 <button onClick={() => navigate('/student/none')}>
                     <PiStudentFill />
                 </button>
-                <a onClick={() => navigate('/student/none')}>Estudante</a>
+                <a onClick={() => navigate('/student/none')}>Alunos</a>
             </OptionsStyle>
 
             <FooterStyle onPress={onPress} setOnPress={setOnPress}>
-                <img src={userData.photoURL as string} />
-                <p>{userData.email}</p>
+                <img src={(userData as User).photoURL as string} />
+                <p>{(userData as User).email}</p>
                 <button onClick={handleSignOut}>
                     <PiSignOutBold />
                 </button>
