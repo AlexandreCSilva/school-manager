@@ -34,7 +34,7 @@ const ContentBoxStyle = styled.div`
     height: 100vh;
     width: 100vw;
     background: rgb(71,168,195);
-    background: linear-gradient(180deg, rgba(71,168,195,1) 9%, rgba(226,246,252,1) 100%);  
+    background: linear-gradient(180deg, rgba(71,168,195,1) 9%, rgba(226,246,252,1) 100%);
 `
 
 const BaseBoxStyle = styled.div<ClickProps>`
@@ -44,12 +44,30 @@ const BaseBoxStyle = styled.div<ClickProps>`
     margin-right: 50px;
     height: 90vh;
     width: auto;
+    min-width: calc(60% - 90px);
     background: #fff;
     border-radius: 50px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+   
+    .content {
+        padding: 20px 30px;
+        width: 95%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        overflow: scroll;
+    }
+    
+    .footer {
+        position: absolute;
+        width: 110%;
+        height: 90px;
+        bottom: 0px;
+        left: -10%;
+    }
 
     @media only screen and (max-width: 1100px) {
         margin-left: calc(5% + 90px);
@@ -60,6 +78,20 @@ const BaseBoxStyle = styled.div<ClickProps>`
         width: 100%;
         height: 100%;
         border-radius: 0;
-}
+
+        .content {
+            width: auto;
+            height: 85%;
+
+            * {
+                width: 100%;
+                height: auto;
+            }
+            
+            .footer {
+                left: -5%;
+            }
+        }
+    }
 `
 export { ContentBox, BaseBox };

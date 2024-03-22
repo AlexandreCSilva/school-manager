@@ -1,10 +1,11 @@
 import React, { Dispatch, SetStateAction, useContext } from 'react';
 import styled from "styled-components";
 import { MdOutlineKeyboardArrowRight, MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import UserContext from '../../contexts/UserContext';
-import { PiSignOutBold } from "react-icons/pi";
+import UserContext, { UserContextType } from '../../contexts/UserContext';
+import { PiSignOutBold, PiStudentFill } from "react-icons/pi";
 import { useNavigate } from 'react-router-dom';
 import { MdSpaceDashboard } from "react-icons/md";
+import { RiGraduationCapFill } from "react-icons/ri";
 
 interface Props {
     onPress: boolean;
@@ -12,7 +13,7 @@ interface Props {
 }
 
 function SideMenu({ onPress, setOnPress }: Props) {
-    const { userData, setUserData } = useContext(UserContext);
+    const { userData, setUserData } = useContext(UserContext) as unknown as UserContextType;
     const navigate = useNavigate();
 
     const handleClick = () => {
@@ -20,10 +21,10 @@ function SideMenu({ onPress, setOnPress }: Props) {
     }
 
     const handleSignOut = () => {
-        setUserData({});
+        setUserData(null);
         navigate('/');
     }
-    
+
     return (
         <SideMenuStyle onPress={onPress} setOnPress={setOnPress}>
             <button className='logo' onClick={handleClick}>
@@ -41,10 +42,25 @@ function SideMenu({ onPress, setOnPress }: Props) {
             <div className='division' />
 
             <OptionsStyle onPress={onPress} setOnPress={setOnPress}>
-                <button onClick={() => navigate('/dashboard')}>
+                <button onClick={() => navigate('/overview')}>
                     <MdSpaceDashboard />
                 </button>
-                <a onClick={() => navigate('/dashboard')}>Dashboard</a>
+                <a onClick={() => navigate('/overview')}>Visão geral</a>
+            </OptionsStyle>
+
+            <OptionsStyle onPress={onPress} setOnPress={setOnPress}>
+                <button onClick={() => navigate('/grades')}>
+                    <RiGraduationCapFill />
+                </button>
+                <a onClick={() => navigate('/grades')}>Notas</a>
+            </OptionsStyle>
+
+
+            <OptionsStyle onPress={onPress} setOnPress={setOnPress}>
+                <button onClick={() => navigate('/student/none')}>
+                    <PiStudentFill />
+                </button>
+                <a onClick={() => navigate('/student/none')}>Estudante</a>
             </OptionsStyle>
 
             <FooterStyle onPress={onPress} setOnPress={setOnPress}>
@@ -153,11 +169,12 @@ const FooterStyle = styled.div<Props>`
         width: 120px;
         min-width: 40px;
         line-break: anywhere;
-        ${(props) => props.onPress ? '' : 'display: none'}
+        ${(props) => props.onPress ? '' : 'display: none;'}
+        color: #fff;
     }
 
     img {
-        ${(props) => props.onPress ? '' : 'display: none'}
+        ${(props) => props.onPress ? '' : 'display: none;'}
     }
 
     button {

@@ -9,12 +9,12 @@ import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
 import { FaGoogle } from "react-icons/fa";
 import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import UserContext from "../../contexts/UserContext";
+import UserContext, { UserContextType } from "../../contexts/UserContext";
 import { auth } from "../../firebase/config";
 import { ValidationError } from "yup";
 
 function SignIn() {
-  const { setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext) as UserContextType;
   const [ isAble, setIsAble ] = useState(true);
   const [ form, setForm ] = useState({
     nome: "",
@@ -43,7 +43,7 @@ function SignIn() {
         const user = userCredential.user
         toast('Login realizado com sucesso!')
         setUserData(user)
-        navigate('/dashboard')
+        navigate('/overview')
       })
       .catch((error) => {
         toast(error.message);

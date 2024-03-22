@@ -9,12 +9,12 @@ import BackgroundFormBox from "../../components/BackgroundFormBox";
 import BackgroundImage from "../../components/BackgroundImage";
 import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase/config";
-import UserContext from "../../contexts/UserContext";
+import UserContext, { UserContextType } from "../../contexts/UserContext";
 import { FaGoogle } from "react-icons/fa";
 import { ValidationError } from "yup";
 
 function SignUp() {
-  const { setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext) as UserContextType;
   const [ isAble, setIsAble ] = useState(true);
   const [ form, setForm ] = useState({
     nome: "",

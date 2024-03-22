@@ -4,8 +4,10 @@ import HomePage from '../pages/HomePage';
 import About from '../pages/About';
 import SignUp from '../pages/SignUp';
 import SignIn from '../pages/SignIn';
-import Dashboard from '../pages/Dashboard';
+import Overview from '../pages/Overview/index.tsx';
 import PrivateRoute from '../components/PrivateRoute';
+import Grades from '../pages/Grades.tsx';
+import Students from '../pages/Student';
 
 function PageRouter() {
     return (
@@ -15,9 +17,19 @@ function PageRouter() {
                 <Route  path="/about" element={<About />}/>
                 <Route  path="/sign-up" element={<SignUp />}/>
                 <Route  path="/sign-in" element={<SignIn />}/>
-                <Route  path="/dashboard" element={
+                <Route  path="/overview" element={
                     <PrivateRoute>
-                        <Dashboard />
+                        <Overview />
+                    </PrivateRoute>
+                }/>
+                <Route  path="/grades" element={
+                    <PrivateRoute>
+                        <Grades />
+                    </PrivateRoute>
+                }/>
+                <Route  path="/student/:name" element={
+                    <PrivateRoute>
+                        <Students />
                     </PrivateRoute>
                 }/>
                 
