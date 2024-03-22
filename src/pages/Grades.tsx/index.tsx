@@ -286,12 +286,14 @@ function Grades() {
                         text: 'Matéria quanto a média',
                         top: '15px',
                         left: '30px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
                       },
                       xAxis: {
                         type: 'category',
-                        data: treatedData
-                          .filter(tdata => tdata.label !== 'média')
-                          .map(tdata => tdata.label),
+                        data: treatedDataStudent
+                          .map(tdata => tdata.name),
                         axisLabel: { interval: 0, rotate: 45 }
                       },
                       yAxis: {
@@ -307,16 +309,17 @@ function Grades() {
                       series: [
                         {
                           type: 'line',
-                          data: treatedData
-                            .filter(tdata => tdata.label !== 'média')
+                          data: treatedDataStudent
                             .map((tdata) => {
                               return { 
                                 value: 
-                                  ((tdata.value / data.length) - 
-                                  (treatedData.filter(tdata => tdata.label === 'média')[0].value / data.length))
+                                  ((tdata.average / data.length) - 
+                                  (treatedDataStudent[0].average / data.length))
                                   .toFixed(2),
-                                itemStyle: { 
-                                  color: '#0efd0e'
+                                itemStyle: {
+                                  color: tdata.name.includes(name) 
+                                    ? '#05434b'
+                                    : '#a5dae4',
                                 }
                               }  
                             }),
@@ -324,16 +327,20 @@ function Grades() {
                             data: [
                               { type: 'max', name: 'Max' },
                               { type: 'min', name: 'Min' }
-                            ]
+                            ],
+                            itemStyle: {
+                              color: '#05434b'
+                            },
                           },
                           markLine: {
                             data: [{ type: 'average', name: 'Avg' }],
                             lineStyle: {
-                              color: 'black'
+                              color: '#05434b'
                             },
                           },
                           lineStyle: {
-                            color: '#0efd0e'
+                            color: '#a5dae4',
+                            width: 4,
                           },
                         },
                       ]
@@ -409,6 +416,9 @@ function Grades() {
                         text: 'Aluno quanto a média',
                         top: '15px',
                         left: '30px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
                       },
                       xAxis: {
                         type: 'category',
@@ -437,7 +447,9 @@ function Grades() {
                                   (treatedDataStudent[0].average / data.length))
                                   .toFixed(2),
                                 itemStyle: {
-                                  color: '#0efd0e'
+                                  color: tdata.name.includes(name) 
+                                    ? '#05434b'
+                                    : '#a5dae4',
                                 }
                               }  
                             }),
@@ -445,16 +457,20 @@ function Grades() {
                             data: [
                               { type: 'max', name: 'Max' },
                               { type: 'min', name: 'Min' }
-                            ]
+                            ],
+                            itemStyle: {
+                              color: '#05434b'
+                            },
                           },
                           markLine: {
                             data: [{ type: 'average', name: 'Avg' }],
                             lineStyle: {
-                              color: 'black'
+                              color: '#05434b'
                             },
                           },
                           lineStyle: {
-                            color: '#0efd0e'
+                            color: '#a5dae4',
+                            width: 4,
                           },
                         },
                       ]

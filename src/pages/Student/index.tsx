@@ -6,13 +6,12 @@ import TopBar from '../../components/table/TopBar';
 import { toast } from 'react-toastify';
 import { Grid } from '@mui/material';
 import SelectMultiple from '../../components/table/SelectMultiple';
-import SliderOptions from '../../components/table/SliderButton';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import SmallBox from '../../components/SmallBox';
 import { fullDataType, semester } from '../../api/rawData';
-import { colorPallete } from '../../utils';
+import { colorPallete, ifNameAlreadyIn, translateGrade } from '../../utils';
 import ReactEcharts from "echarts-for-react";
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function calculateAverage(firstSemester: semester & { average: number }, secondSemester: semester & { average: number }): number {
   return (firstSemester.average + secondSemester.average) / 2;
@@ -38,16 +37,14 @@ function treatDataByStudent(data: any, setTreatedDataStudent: (response: any[]) 
 
 function Students() {
     const [onPress, setOnPress] = useState(true);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<fullDataType[]>([]);
     const [onIsFiltering, setOnIsFiltering] = useState(false);
     const [students, setStudents] = useState<string[]>([])
     const [years, setYears] = useState<number[]>([])
-    const [classes, setClasses] = useState<string[]>([])
     const [selectedstudents, setSelectedStudents] = useState<string[]>([])
     const [selectedyears, setSelectedYears] = useState<number[]>([])
-    const [selectedclasses, setSelectedClasses] = useState<string[]>([])
-    const [onSlide, setOnSlide] = useState('nada');
     const [treatedDataStudent, setTreatedDataStudent] = useState<any[]>([]);
+    const [studentData, setStudentData] = useState<fullDataType>();
     const navigate = useNavigate();
     const { name } = useParams();
 
@@ -66,16 +63,6 @@ function Students() {
         .then((res) => res.json())
         .then((json) => {
           setYears(json)
-        })
-        .catch((error) => {
-          toast('error on get api data')
-          console.log(error.message)
-        })
-
-      fetch("/api/classes" + str)
-        .then((res) => res.json())
-        .then((json) => {
-          setClasses(json)
         })
         .catch((error) => {
           toast('error on get api data')
@@ -102,8 +89,17 @@ function Students() {
     }, []);
 
     useEffect(() => {
-      treatDataByStudent(data, setTreatedDataStudent);
+      treatDataByStudent(ifNameAlreadyIn(data), setTreatedDataStudent);
     }, [data]);
+
+    useEffect(() => {
+      setStudentData({
+        ...treatedDataStudent
+          .filter((student: fullDataType) => student.name.includes(name as string))[0],
+        ...(data as fullDataType[])
+          .filter((student: fullDataType) => student.name.includes(name as string))[0],
+      });
+    }, [treatedDataStudent]);
 
     const handleFilter = () => {
       let strFilter = '';
@@ -115,12 +111,6 @@ function Students() {
       selectedstudents.forEach((student) => {
         strFilter = strFilter + '&names[]=' + student
       });
-
-      selectedclasses.forEach((className) => {
-        strFilter = strFilter + '&classes[]=' + className
-      });
-
-      strFilter = onSlide !== 'nada' ? '&state=' + onSlide + strFilter : '' + strFilter;
 
       if (strFilter !== '') {
         strFilter = '?' + strFilter.substring(1);
@@ -170,18 +160,6 @@ function Students() {
                           setSelectedValues={setSelectedStudents}  
                         />
                       </Grid>
-                      <Grid item>
-                        <SelectMultiple 
-                          values={classes} 
-                          text='Classe' 
-                          size={110}
-                          selectedValues={selectedclasses}
-                          setSelectedValues={setSelectedClasses} 
-                        />
-                      </Grid>
-                      <Grid item>
-                        <SliderOptions setOnSlide={setOnSlide} onSlide={onSlide} />
-                      </Grid>
 
                       <Grid item>
                         <button onClick={handleFilter}>filtrar</button>
@@ -195,14 +173,18 @@ function Students() {
               </TopBar>
               
               <div className='content'>
+
                 <SmallBox>
                   <ReactEcharts 
                     style={{height: '400px', width: '100%'}}
                     option={{
                       title: {
-                        text: 'Desempenho quanto aos demais alunos',
+                        text: 'Desempenho',
                         top: '15px',
                         left: '30px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
                       },
                       dataZoom: [
                         {
@@ -233,7 +215,7 @@ function Students() {
                             return { 
                               value: tdata.average, 
                               itemStyle: { 
-                                color: tdata.name === name 
+                                color: tdata.name.includes(name)
                                 ? '#05434b'
                                 : '#a5dae4',
                               }
@@ -252,6 +234,7 @@ function Students() {
                     onEvents={{
                       'click': (event: { name: string }) => {
                         navigate('/student/' + event.name);
+                        navigate(0);
                       }
                     }}
                   />
@@ -265,6 +248,9 @@ function Students() {
                         text: 'Desempenho quanto a média',
                         top: '15px',
                         left: '30px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
                       },
                       xAxis: {
                         type: 'category',
@@ -293,7 +279,7 @@ function Students() {
                                   (treatedDataStudent[0].average / data.length))
                                   .toFixed(2),
                                 itemStyle: {
-                                  color: tdata.name === name 
+                                  color: tdata.name.includes(name) 
                                     ? '#05434b'
                                     : '#a5dae4',
                                 }
@@ -311,7 +297,7 @@ function Students() {
                           markLine: {
                             data: [{ type: 'average', name: 'Avg' }],
                             lineStyle: {
-                              color: 'black'
+                              color: '#05434b'
                             },
                           },
                           lineStyle: {
@@ -324,10 +310,234 @@ function Students() {
                     onEvents={{
                       'click': (event: { name: string }) => {
                         navigate('/student/' + event.name);
+                        navigate(0);
                       }
                     }}
                   />
                 </SmallBox>
+
+                <SmallBox>
+                  <ReactEcharts 
+                    style={{ height: '400px', width: '100%' }}
+                    option={{
+                      title: {
+                        text: 'Média por matéria (primeiro semestre)',
+                        top: '15px',
+                        left: '30px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
+                      },
+                      tooltip: {
+                        trigger: 'item'
+                      },
+                      legend: {
+                        orient: 'vertical',
+                        top: '12%',
+                        left: '25px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
+                      },
+                      xAxis: {
+                        type: 'category',
+                        data: studentData?.firstSemester ? Object.keys(studentData.firstSemester)
+                          .map(key => translateGrade(key.replace('Grade', '')))
+                          : [],
+                        axisLabel: { interval: 0, rotate: 45 },
+                      },
+                      yAxis: {
+                        type: 'value'
+                      },
+                      grid: [
+                        {
+                          height: '60%'
+                        },
+                      ],
+                      series: [
+                        {
+                          type: 'bar',
+                          label: {
+                            show: false,
+                            position: 'center',
+                            color: '#05434b',
+                          },
+                          data: studentData?.firstSemester ? Object.values(studentData.firstSemester).map((value, index) => {
+                            return {
+                              value: value,
+                              itemStyle: {
+                                color: colorPallete[index],
+                              },
+                            }
+                          })
+                          : [],
+                          markLine: {
+                            data: [{ type: 'average', name: 'Avg' }],
+                            lineStyle: {
+                              color: 'black'
+                            }
+                          },
+                        }
+                      ],
+                    }}
+                  />
+                </SmallBox>
+
+                <SmallBox>
+                  <ReactEcharts 
+                    style={{ height: '400px', width: '100%' }}
+                    option={{
+                      title: {
+                        text: 'Média por matéria (segundo semestre)',
+                        top: '15px',
+                        left: '30px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
+                      },
+                      tooltip: {
+                        trigger: 'item'
+                      },
+                      legend: {
+                        orient: 'vertical',
+                        top: '12%',
+                        left: '25px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
+                      },
+                      xAxis: {
+                        type: 'category',
+                        data: studentData?.secondSemester ? Object.keys(studentData.secondSemester)
+                          .map(key => translateGrade(key.replace('Grade', '')))
+                          : [],
+                        axisLabel: { interval: 0, rotate: 45 },
+                      },
+                      yAxis: {
+                        type: 'value'
+                      },
+                      grid: [
+                        {
+                          height: '60%'
+                        },
+                      ],
+                      series: [
+                        {
+                          type: 'bar',
+                          label: {
+                            show: false,
+                            position: 'center',
+                            color: '#05434b',
+                          },
+                          data: studentData?.secondSemester ? Object.values(studentData.secondSemester).map((value, index) => {
+                            return {
+                              value: value,
+                              itemStyle: {
+                                color: colorPallete[index],
+                              },
+                            }
+                          })
+                          : [],
+                          markLine: {
+                            data: [{ type: 'average', name: 'Avg' }],
+                            lineStyle: {
+                              color: 'black'
+                            }
+                          },
+                        }
+                      ],
+                    }}
+                  />
+                </SmallBox>
+
+                <SmallBox>
+                  <ReactEcharts 
+                    style={{height: '400px', width: '100%'}}
+                    option={{
+                      title: {
+                        text: 'Presença',
+                        top: '15px',
+                        left: '30px',
+                        textStyle: {
+                          color: '#05434b',
+                        },
+                      },
+                      tooltip: {
+                        trigger: 'item',
+                        formatter: function(params: { value: number }) {
+                          return params.value + '%';
+                        },
+                      },
+                      legend: {
+                        top: '13%',
+                        left: '30px',
+                        orient: 'vertical',
+                      },
+                      series: [
+                        {
+                          type: 'pie',
+                          radius: ['40%', '70%'],
+                          avoidLabelOverlap: false,
+                          padAngle: 3,
+                          startAngle: 180,
+                          itemStyle: {
+                            borderRadius: 10
+                          },
+                          label: {
+                            show: false,
+                            position: 'center'
+                          },
+                          emphasis: {
+                            label: {
+                              show: true,
+                              fontSize: 30,
+                              textStyle: {
+                                color: '#05434b',
+                              },
+                            }
+                          },
+                          labelLine: {
+                            show: false
+                          },
+                          data:  studentData 
+                            ? [
+                              { 
+                                value: 100 - (
+                                  data
+                                    .filter((student: fullDataType) => student.name === name)
+                                    .reduce((sum, currentValue: fullDataType) => sum + currentValue.presencePercentage, 0)
+                                  / data
+                                    .filter((student: fullDataType) => student.name === name).length
+                                ),
+                                name: 'faltas',
+                                itemStyle: {
+                                  color: '#a5dae4'
+                                },
+                              },
+                              { 
+                                value: data
+                                    .filter((student: fullDataType) => student.name === name)
+                                    .reduce((sum, currentValue: fullDataType) => sum + currentValue.presencePercentage, 0)
+                                  / data
+                                    .filter((student: fullDataType) => student.name === name).length,
+                                name: 'presença',
+                                itemStyle: {
+                                  color: '#05434b'
+                                },
+                              },
+                            ]
+                            : []
+                        }
+                      ]
+                    }} 
+                    onEvents={{
+                      'click': (event: { name: string }) => {
+                        navigate('/student/' + event.name);
+                      }
+                    }}
+                  />
+                </SmallBox>
+                
               </div>
             </BaseBox>
           </ContentBox>

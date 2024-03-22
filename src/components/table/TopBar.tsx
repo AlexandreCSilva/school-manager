@@ -23,9 +23,11 @@ const TopBarStyle = styled.div<{ isFiltering?: boolean }>`
 
     h1 {
         color: #05434b;
-        font-size: 24px;
+        font-size: 32px;
         margin-left: 5%;
         white-space: nowrap;
+        font-style: bold;
+        font-weight: 1200px;
     }
 
     .right-content {

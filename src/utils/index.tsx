@@ -1,3 +1,5 @@
+import { fullDataType } from "../api/rawData";
+
 export function translateState(state: string) {
     switch (state) {
         case 'approved':
@@ -64,7 +66,32 @@ export function greenToRedColor(value: number) {
 }
 
 export const colorPallete = [
-    '#ef1101', '#5c0300', '#a45d00', '#fd9206', '#ffd000', '#758f00',
-    '#0efd0e', '#009a00', '#010afb', '#070b74', '#5d107e', '#ba20fd',
-    '#e7766e',
+    '#05434b', '#3f8e9e', '#a5dae4', '#58d199', '#3ac468', '#44be26',
+    '#29a809', '#a4cf3e', '#e4e73d', '#ebca39', '#e7a84a', '#FFB38E', 
+    '#FF8E8F', '#E178C5', '#8e61e2', '#9339cf',
 ];
+
+export function ifNameAlreadyIn(data: fullDataType[]): fullDataType[] {
+    const aux: string[] = [];
+    const result: fullDataType[] = [];
+
+    data.forEach(student => {
+        if (aux.includes(student.name)) {
+            const index = result.indexOf(
+                result
+                    .find(studentResult => studentResult && studentResult.name === student.name) as fullDataType
+                );
+
+            result.push({ ...result[index], name: '(' + result[index].year + ') ' + student.name,})
+
+            delete result[index];
+
+            result.push(student)
+        } else {
+            aux.push(student.name);
+            result.push(student)
+        }
+    })
+
+    return result;
+}

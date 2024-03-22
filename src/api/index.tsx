@@ -179,8 +179,6 @@ const routes = function(this: any) {
                 }
             })
 
-            const totalElements = rawData.length;
-    
             const treatedData: fullDataType[] = rawData.map(element => {
                 let count = 0;
                 let sum = 0;
@@ -263,7 +261,7 @@ const routes = function(this: any) {
             const { years, classes } = request.queryParams;
             const yearFilter: number[] = years 
                 ? (years as string[]).map((year: string) => Number(year)) 
-                : [];
+                : [2024];
             const classFilter: string[] = classes ? classes as unknown as string[] : [];
 
             const rawData: string[] = [];

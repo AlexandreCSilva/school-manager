@@ -71,7 +71,7 @@ const LogoStyle = styled.div`
     font-weight: 700;
     font-style: normal;
     font-size: 28px;
-    color: #0B7077;
+    color: #0b7077;
     will-change: transform;
     padding-left: 30px;
     margin-top: -20px;

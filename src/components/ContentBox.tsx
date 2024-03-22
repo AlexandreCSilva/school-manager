@@ -80,7 +80,13 @@ const BaseBoxStyle = styled.div<ClickProps>`
         border-radius: 0;
 
         .content {
-            height: 60%;
+            width: auto;
+            height: 85%;
+
+            * {
+                width: 100%;
+                height: auto;
+            }
             
             .footer {
                 left: -5%;

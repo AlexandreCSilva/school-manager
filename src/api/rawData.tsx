@@ -329,7 +329,7 @@ const data = [
             philosophyGrade: 7,
         },
         secondSemester: {
-            mathGrade: 8.5,
+            mathGrade: 6,
             portugueseGrade: 8.5,
             historyGrade: 7,
             geographyGrade: 8,
