@@ -1,10 +1,11 @@
 export type fullDataType = {
+    studentId: number;
     name: string;
     phoneNumber: string;
     year: number;
     class: string;
-    firstSemester: semester | { average: string };
-    secondSemester: semester | { average: string };
+    firstSemester: semester & { average: number };
+    secondSemester: semester & { average: number };
     presence: number;
     presencePercentage: number;
 }
