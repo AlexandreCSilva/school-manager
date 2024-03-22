@@ -1,8 +1,8 @@
 import data, { dataType, fullDataType } from './rawData';
 import { Request } from 'miragejs';
 
-function getSemesterGradesInArray(obj: any) {
-    return Object.keys(obj).map(k => obj[k]);
+function getSemesterGradesInArray(obj: any): number[] {
+    return Object.values(obj);
 }
 
 function daysPassed(dt: Date) {
@@ -63,7 +63,7 @@ const routes = function(this: any) {
             const treatedData: fullDataType[] = rawData.map(element => {
                 let count = 0;
                 let sum = 0;
-                let aux = [];
+                let aux: number[] = [];
 
                 count = Object.keys(element.firstSemester).length;
 
@@ -182,7 +182,7 @@ const routes = function(this: any) {
             const treatedData: fullDataType[] = rawData.map(element => {
                 let count = 0;
                 let sum = 0;
-                let aux = [];
+                let aux: number[] = [];
 
                 count = Object.keys(element.firstSemester).length;
 

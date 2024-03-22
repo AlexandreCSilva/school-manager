@@ -26,7 +26,8 @@ function SignUp() {
   const provider = new GoogleAuthProvider();
 
   function handleForm(element: ChangeEvent<HTMLInputElement>) {
-    const target = element.target as unknown as { name: string, value: string }
+    const target = element.target as unknown as {name: string, value: string};
+
     setForm({
       ...form,
       [target.name]: target.value,

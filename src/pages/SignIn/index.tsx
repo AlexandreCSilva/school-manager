@@ -26,7 +26,8 @@ function SignIn() {
   const provider = new GoogleAuthProvider();
 
   function handleForm(element: ChangeEvent<HTMLInputElement>) {
-    const target = element.target as unknown as { name: string, value: string }
+    const target = element.target as unknown as {name: string, value: string};
+
     setForm({
       ...form,
       [target.name]: target.value,
@@ -102,7 +103,7 @@ function SignIn() {
         <div className='division'/>
 
         <a onClick={() => navigate('/sign-up')}> registrar-se </a>
-        <button className="emphasis" onClick={() => navigate('/')}> Login </button>
+        <button className="emphasis"  onClick={(e) => e.detail}> Login </button>
       </Menu>
 
       <BackgroundImage />
