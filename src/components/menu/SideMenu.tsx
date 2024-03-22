@@ -61,7 +61,7 @@ function SideMenu({ onPress, setOnPress }: Props) {
                 <button onClick={() => navigate('/student/none')}>
                     <PiStudentFill />
                 </button>
-                <a onClick={() => navigate('/student/none')}>Estudante</a>
+                <a onClick={() => navigate('/student/none')}>Alunos</a>
             </OptionsStyle>
 
             <FooterStyle onPress={onPress} setOnPress={setOnPress}>

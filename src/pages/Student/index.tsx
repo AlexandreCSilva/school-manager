@@ -233,12 +233,7 @@ function Students() {
                     }} 
                     onEvents={{
                       'click': (event: { name: string }) => {
-                        navigate('/student/' + event.name.slice(
-                          event.name.indexOf(') ') != -1 
-                            ? 0 
-                            : event.name.indexOf(') '), 
-                          event.name.length
-                        ));
+                        navigate('/student/' + event.name);
                         navigate(0);
                       }
                     }}
@@ -314,7 +309,7 @@ function Students() {
                     }}
                     onEvents={{
                       'click': (event: { name: string }) => {
-                        navigate('/student/' + event.name.replace('/(.*)/', ''));
+                        navigate('/student/' + event.name);
                         navigate(0);
                       }
                     }}

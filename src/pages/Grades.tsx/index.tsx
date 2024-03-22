@@ -349,6 +349,11 @@ function Grades() {
                         },
                       ]
                     }}
+                    onEvents={{
+                      'click': (event: { name: string }) => {
+                        navigate('/student/' + event.name);
+                      }
+                    }}
                   />
                 </SmallBox>
                 
@@ -406,7 +411,7 @@ function Grades() {
                     }} 
                     onEvents={{
                       'click': (event: { name: string }) => {
-                        navigate('/student/' + event.name.replace('/(.*)/', ''));
+                        navigate('/student/' + event.name);
                       }
                     }}
                   />
@@ -481,7 +486,7 @@ function Grades() {
                     }}
                     onEvents={{
                       'click': (event: { name: string }) => {
-                        navigate('/student/' + event.name.replace('/(.*)/', ''));
+                        navigate('/student/' + event.name);
                       }
                     }}
                   />
